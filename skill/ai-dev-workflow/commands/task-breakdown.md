@@ -1,0 +1,33 @@
+---
+description: 按技术方案拆解任务清单（第④步）。触发词：任务拆解/拆任务/tasks/任务清单。用法：/task-breakdown <技术方案路径或功能名>
+---
+
+# 任务拆解
+
+根据技术方案 md，拆解为可独立实现、独立测试的任务清单。
+
+## 输入
+
+- 第③步的技术方案 md
+- 项目约束（`docs/项目约束.md`）
+
+## 执行
+
+1. 按类型套用模板 `templates/4.1-任务拆解.md` 的任务结构：
+
+- **Controller**：Phase 0 数据层 → Phase 1 契约测试（先红）→ Phase 2 Service → Phase 3 Controller → Phase 4 验证 → Phase 5 收尾
+- **Listener**：Phase 0 数据层 → Phase 1 消费逻辑测试（先红）→ Phase 2 实现 → Phase 3 集成 → Phase 4 收尾
+- **Job**：Phase 0 数据层 → Phase 1 执行逻辑测试（先红）→ Phase 2 实现 → Phase 3 集成 → Phase 4 收尾
+
+2. 每个任务格式：`[ID] [P?] [Phase] 描述（文件路径 + 验收方法）`
+   - `[P]` = 可并行（不同文件、无依赖）
+
+## 输出
+
+`docs/任务拆解/<功能名>-任务拆解.md`
+
+## 完成标准
+
+- [ ] 每个任务有文件路径 + 验收方法（AI 可独立执行）
+- [ ] 技术方案的验收场景全部翻译成测试任务（无遗漏）
+- [ ] 依赖顺序正确（Phase 0/1 完成后才进 Phase 2）

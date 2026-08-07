@@ -52,26 +52,36 @@ ai-dev-workflow/
 │   ├── 流程总览.md            # 5 步完整流程（权威定义）
 │   ├── Vibe-Coding-与-Spec-Coding-对比.md
 │   └── Spec-Coding-详解.md    # SDD 六步 + 中间产物
-├── templates/                 # 中间产物空白模板（可直接复制使用）
-│   ├── 01-功能清单.md
-│   ├── 02-项目约束.md
-│   ├── 3.1-技术方案-Controller.md
-│   ├── 3.2-技术方案-Listener.md
-│   ├── 3.3-技术方案-Job.md
-│   ├── 4.1-任务拆解.md
-│   ├── 4.2-接口契约测试.md
-│   ├── 5.1-编码指令.md
-│   ├── 5.2-验收报告.md
-└── skill/                     # 可安装的 Agent Skill
+└── skill/                     # 可安装的 Agent Skill（自包含：SKILL.md + commands + templates）
     └── ai-dev-workflow/
-        └── SKILL.md
+        ├── SKILL.md           # 主入口（模型自动触发）
+        ├── commands/          # 9 个步骤命令（/命令 分步执行）
+        │   ├── feature-list.md        # ① 功能清单
+        │   ├── constraints.md         # ② 项目约束
+        │   ├── design-controller.md   # ③ 技术方案-Controller
+        │   ├── design-listener.md     # ③ 技术方案-Listener
+        │   ├── design-job.md          # ③ 技术方案-Job
+        │   ├── task-breakdown.md      # ④ 任务拆解
+        │   ├── contract-tests.md      # ④ 接口契约测试
+        │   ├── implement.md           # ⑤ AI 编码
+        │   └── accept.md              # ⑤ 验收报告
+        └── templates/         # 9 份中间产物空白模板（含完整示例）
+            ├── 01-功能清单.md
+            ├── 02-项目约束.md
+            ├── 3.1-技术方案-Controller.md
+            ├── 3.2-技术方案-Listener.md
+            ├── 3.3-技术方案-Job.md
+            ├── 4.1-任务拆解.md
+            ├── 4.2-接口契约测试.md
+            ├── 5.1-编码指令.md
+            └── 5.2-验收报告.md
 ```
 
 ## 快速开始
 
 ### 方式一：纯手工使用模板（无需任何工具）
 
-1. 从 `templates/` 复制需要的模板到你的项目 `docs/` 目录
+1. 从 `skill/ai-dev-workflow/templates/` 复制需要的模板到你的项目 `docs/` 目录
 2. 按 ①→⑤ 顺序填写（每份模板开头有填写说明）
 3. 第 ⑤ 步把 `5.1-编码指令.md` 的内容连同 `任务拆解.md` 一起发给 AI
 
@@ -91,7 +101,25 @@ cp -r skill/ai-dev-workflow ~/.agents/skills/
 
 > 注意：本项目自带 `.gitignore` 的 `!` 规则保证 `SKILL.md` 会被克隆下来；若你从别处拷贝，确保 `SKILL.md` 文件存在。
 
-#### 2. 触发方式（对 Agent 说什么）
+#### 2. 触发方式
+
+**方式 A：斜杠命令分步执行（推荐，可随时介入检查）**
+
+安装后，skill 的 `commands/` 目录注册为 `/命令`，输入 `/命令 + 内容` 即可执行对应步骤：
+
+| 命令 | 步骤 | 示例用法 |
+|---|---|---|
+| `/feature-list` | ① 生成功能清单 | `/feature-list 订单模块：创建/查询/取消订单` |
+| `/constraints` | ② 生成项目约束 | `/constraints Spring Boot 3.2 + MyBatis-Plus` |
+| `/design-controller` | ③ Controller 技术方案 | `/design-controller 订单创建` |
+| `/design-listener` | ③ Listener 技术方案 | `/design-listener 订单支付回调` |
+| `/design-job` | ③ Job 技术方案 | `/design-job 订单超时关闭` |
+| `/task-breakdown` | ④ 任务拆解 | `/task-breakdown 技术方案/订单创建.md` |
+| `/contract-tests` | ④ 写契约测试（先红） | `/contract-tests 技术方案/订单创建.md` |
+| `/implement` | ⑤ AI 编码（让测试变绿） | `/implement 任务拆解/订单创建.md` |
+| `/accept` | ⑤ 验收报告 | `/accept 订单创建` |
+
+**方式 B：自然语言触发**
 
 | 你想做什么 | 对 Agent 说 |
 |---|---|
@@ -104,7 +132,7 @@ cp -r skill/ai-dev-workflow ~/.agents/skills/
 
 #### 3. Skill 会做什么
 
-安装后，Agent 按 `SKILL.md` 中的 5 步流程执行，每一步使用对应模板：
+安装后，Agent 按 `SKILL.md` 中的 5 步流程执行，每一步使用 `templates/` 中对应模板：
 
 | 步骤 | 动作 | 使用的模板 |
 |---|---|---|
@@ -114,7 +142,7 @@ cp -r skill/ai-dev-workflow ~/.agents/skills/
 | ④ 任务拆解 + 契约测试 | 生成任务清单 + 红色测试 | `templates/4.1-任务拆解.md`、`4.2-接口契约测试.md` |
 | ⑤ AI 编码 + 收敛验收 | 让测试变绿 + 输出验收报告 | `templates/5.1-编码指令.md`、`5.2-验收报告.md` |
 
-> `SKILL.md` 内的模板路径是相对 skill 目录的（`templates/xxx.md`），安装后请保持 `skill/ai-dev-workflow/` 目录结构与仓库一致，模板才能被正确引用。若你希望 Agent 引用仓库根目录的 `templates/`，可将 SKILL.md 中的 `templates/` 改为你的实际路径。
+> skill 是**自包含**的：`SKILL.md`、`commands/`、`templates/` 在同一目录内，模板路径为相对引用，安装后无需任何额外配置。
 
 #### 4. 重要提示（防"骗绿"）
 
