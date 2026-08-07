@@ -59,9 +59,7 @@ ai-dev-workflow/
         │   ├── feature-list.md        # 1.1 功能清单
         │   ├── clarify.md             # 1.2 澄清歧义/边界/依赖
         │   ├── constraints.md         # 2.1 项目约束
-        │   ├── design-controller.md   # 3.1 技术方案-Controller
-        │   ├── design-listener.md     # 3.2 技术方案-Listener
-        │   ├── design-job.md          # 3.3 技术方案-Job
+        │   ├── design.md              # 3.x 技术方案（按类型自动路由）
         │   ├── task-breakdown.md      # 4.1 任务拆解
         │   ├── contract-tests.md      # 4.2 接口契约测试
         │   ├── implement.md           # 5.1 AI 编码
@@ -114,9 +112,7 @@ cp -r skill/ai-dev-workflow ~/.agents/skills/
 | 1.1 | `/feature-list` | 生成功能清单 | `/feature-list 订单模块：创建/查询/取消订单` |
 | 1.2 | `/clarify` | 澄清歧义/边界/依赖 | `/clarify 订单模块` |
 | 2.1 | `/constraints` | 生成项目约束 | `/constraints Spring Boot 3.2 + MyBatis-Plus` |
-| 3.1 | `/design-controller` | Controller 技术方案 | `/design-controller 订单创建` |
-| 3.2 | `/design-listener` | Listener 技术方案 | `/design-listener 订单支付回调` |
-| 3.3 | `/design-job` | Job 技术方案 | `/design-job 订单超时关闭` |
+| 3.x | `/design` | 技术方案（自动路由类型） | `/design 订单创建` |
 | 4.1 | `/task-breakdown` | 任务拆解 | `/task-breakdown 技术方案/订单创建.md` |
 | 4.2 | `/contract-tests` | 写契约测试（先红） | `/contract-tests 技术方案/订单创建.md` |
 | 5.1 | `/implement` | AI 编码（让测试变绿） | `/implement 任务拆解/订单创建.md` |

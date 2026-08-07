@@ -26,9 +26,7 @@ description: Use when the user wants to develop a module or feature with AI foll
 | 1.1 | `/feature-list` | 功能清单 |
 | 1.2 | `/clarify` | 盘问歧义/边界/依赖（方案前必做） |
 | 2.1 | `/constraints` | 项目约束 |
-| 3.1 | `/design-controller` | 技术方案-Controller |
-| 3.2 | `/design-listener` | 技术方案-Listener |
-| 3.3 | `/design-job` | 技术方案-Job |
+| 3.x | `/design` | 技术方案（按类型自动路由：Controller/Listener/Job） |
 | 4.1 | `/task-breakdown` | 任务拆解 |
 | 4.2 | `/contract-tests` | 接口契约测试（先红） |
 | 5.1 | `/implement` | AI 编码（让测试变绿） |
@@ -65,11 +63,12 @@ description: Use when the user wants to develop a module or feature with AI foll
 - **输出**：技术架构 + 项目约束（硬规则，能检查对错，禁止"尽量/建议"）
 - **完成标准**：每条约束可检查，版本号写死，AI 可直接读取
 
-### 3.x 技术方案（人 + AI 辅助）→ `/design-controller` `/design-listener` `/design-job`
+### 3.x 技术方案（人 + AI 辅助）→ `/design`
 
 - **输入**：功能清单
-- **输出**：每功能项一份技术方案 md，按类型套模板（接口/JSON 示例/DDL/验收场景）
-- **完成标准（质量闸门）**：入参出参错误码无"待定"；DDL 完整；**验收场景含合法+非法+边界**；横切关注点已写明
+- **动作**：读功能项的类型列，自动路由到对应模板——Controller → `3.1-技术方案-Controller.md`、Listener → `3.2-技术方案-Listener.md`、Job → `3.3-技术方案-Job.md`
+- **输出**：每功能项一份技术方案 md（接口/JSON 示例/DDL/验收场景）
+- **完成标准（质量闸门）**：入参出参错误码无"待定"；DDL 完整；**验收场景含合法+非法+边界**；类型特有横切关注点（权限事务/幂等死信/防重入批处理）已写明
 
 ### 4.1 任务拆解 + 4.2 契约测试（人主导，AI 辅助）→ `/task-breakdown` `/contract-tests`
 
