@@ -24,6 +24,7 @@ description: Use when the user wants to develop a module or feature with AI foll
 | 步骤 | 命令 | 用途 |
 |---|---|---|
 | ① 需求分析 | `/feature-list` | 生成功能清单 |
+| ①+ 澄清 | `/clarify` | 盘问歧义/边界/依赖（方案前必做） |
 | ② 技术架构 | `/constraints` | 生成项目约束 |
 | ③ 技术方案 | `/design-controller` `/design-listener` `/design-job` | 按类型生成方案 |
 | ④ 任务拆解 | `/task-breakdown` | 拆任务清单 |
@@ -46,6 +47,15 @@ description: Use when the user wants to develop a module or feature with AI foll
 - **输入**：需求文档
 - **输出**：功能清单总览文件（表格），每项含：类型（Controller/Listener/Job）、优先级、依赖、**验收标准**（可验证，不能写"实现 XX 功能"）
 - **完成标准**：每项有类型 + 可验证验收标准 + 依赖标注
+
+### ①+ 澄清（人 + AI）→ `/clarify` ★ 方案前必做
+
+- **输入**：功能清单
+- **输出**：澄清问题清单（人确认答案）+ 更新后的功能清单（补边界/风险列、依赖）
+- **动作**：逐项盘问三类问题——**歧义**（模糊词/未定义字段/不可验证标准）、**边界用例**（重复/并发/空值/超长/状态流转）、**依赖**（功能间/外部系统/数据）
+- **完成标准**：无"待确认"残留；每个功能项边界用例已列出；依赖完整
+
+> 这是防跑偏的第一道闸门：歧义带进方案，后面全偏。宁可在这里多盘问，不要带歧义进入 `/design-*`。
 
 ### ② 技术架构（人主导）→ `/constraints`
 

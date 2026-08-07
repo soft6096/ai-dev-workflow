@@ -55,8 +55,9 @@ ai-dev-workflow/
 └── skill/                     # 可安装的 Agent Skill（自包含：SKILL.md + commands + templates）
     └── ai-dev-workflow/
         ├── SKILL.md           # 主入口（模型自动触发）
-        ├── commands/          # 9 个步骤命令（/命令 分步执行）
+        ├── commands/          # 10 个步骤命令（/命令 分步执行）
         │   ├── feature-list.md        # ① 功能清单
+        │   ├── clarify.md             # ①+ 澄清歧义/边界/依赖
         │   ├── constraints.md         # ② 项目约束
         │   ├── design-controller.md   # ③ 技术方案-Controller
         │   ├── design-listener.md     # ③ 技术方案-Listener
@@ -65,8 +66,9 @@ ai-dev-workflow/
         │   ├── contract-tests.md      # ④ 接口契约测试
         │   ├── implement.md           # ⑤ AI 编码
         │   └── accept.md              # ⑤ 验收报告
-        └── templates/         # 9 份中间产物空白模板（含完整示例）
+        └── templates/         # 10 份中间产物空白模板（含完整示例）
             ├── 01-功能清单.md
+            ├── 01.5-澄清问题清单.md
             ├── 02-项目约束.md
             ├── 3.1-技术方案-Controller.md
             ├── 3.2-技术方案-Listener.md
@@ -110,6 +112,7 @@ cp -r skill/ai-dev-workflow ~/.agents/skills/
 | 命令 | 步骤 | 示例用法 |
 |---|---|---|
 | `/feature-list` | ① 生成功能清单 | `/feature-list 订单模块：创建/查询/取消订单` |
+| `/clarify` | ①+ 澄清歧义/边界/依赖 | `/clarify 订单模块` |
 | `/constraints` | ② 生成项目约束 | `/constraints Spring Boot 3.2 + MyBatis-Plus` |
 | `/design-controller` | ③ Controller 技术方案 | `/design-controller 订单创建` |
 | `/design-listener` | ③ Listener 技术方案 | `/design-listener 订单支付回调` |
