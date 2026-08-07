@@ -56,16 +56,16 @@ ai-dev-workflow/
     └── ai-dev-workflow/
         ├── SKILL.md           # 主入口（模型自动触发）
         ├── commands/          # 10 个步骤命令（/命令 分步执行）
-        │   ├── feature-list.md        # ① 功能清单
-        │   ├── clarify.md             # ①+ 澄清歧义/边界/依赖
-        │   ├── constraints.md         # ② 项目约束
-        │   ├── design-controller.md   # ③ 技术方案-Controller
-        │   ├── design-listener.md     # ③ 技术方案-Listener
-        │   ├── design-job.md          # ③ 技术方案-Job
-        │   ├── task-breakdown.md      # ④ 任务拆解
-        │   ├── contract-tests.md      # ④ 接口契约测试
-        │   ├── implement.md           # ⑤ AI 编码
-        │   └── accept.md              # ⑤ 验收报告
+        │   ├── feature-list.md        # 1.1 功能清单
+        │   ├── clarify.md             # 1.2 澄清歧义/边界/依赖
+        │   ├── constraints.md         # 2.1 项目约束
+        │   ├── design-controller.md   # 3.1 技术方案-Controller
+        │   ├── design-listener.md     # 3.2 技术方案-Listener
+        │   ├── design-job.md          # 3.3 技术方案-Job
+        │   ├── task-breakdown.md      # 4.1 任务拆解
+        │   ├── contract-tests.md      # 4.2 接口契约测试
+        │   ├── implement.md           # 5.1 AI 编码
+        │   └── accept.md              # 5.2 验收报告
         └── templates/         # 10 份中间产物空白模板（含完整示例）
             ├── 1.1-功能清单.md
             ├── 1.2-澄清问题清单.md
@@ -109,18 +109,18 @@ cp -r skill/ai-dev-workflow ~/.agents/skills/
 
 安装后，skill 的 `commands/` 目录注册为 `/命令`，输入 `/命令 + 内容` 即可执行对应步骤：
 
-| 命令 | 步骤 | 示例用法 |
-|---|---|---|
-| `/feature-list` | ① 生成功能清单 | `/feature-list 订单模块：创建/查询/取消订单` |
-| `/clarify` | ①+ 澄清歧义/边界/依赖 | `/clarify 订单模块` |
-| `/constraints` | ② 生成项目约束 | `/constraints Spring Boot 3.2 + MyBatis-Plus` |
-| `/design-controller` | ③ Controller 技术方案 | `/design-controller 订单创建` |
-| `/design-listener` | ③ Listener 技术方案 | `/design-listener 订单支付回调` |
-| `/design-job` | ③ Job 技术方案 | `/design-job 订单超时关闭` |
-| `/task-breakdown` | ④ 任务拆解 | `/task-breakdown 技术方案/订单创建.md` |
-| `/contract-tests` | ④ 写契约测试（先红） | `/contract-tests 技术方案/订单创建.md` |
-| `/implement` | ⑤ AI 编码（让测试变绿） | `/implement 任务拆解/订单创建.md` |
-| `/accept` | ⑤ 验收报告 | `/accept 订单创建` |
+| 编号 | 命令 | 用途 | 示例用法 |
+|---|---|---|---|
+| 1.1 | `/feature-list` | 生成功能清单 | `/feature-list 订单模块：创建/查询/取消订单` |
+| 1.2 | `/clarify` | 澄清歧义/边界/依赖 | `/clarify 订单模块` |
+| 2.1 | `/constraints` | 生成项目约束 | `/constraints Spring Boot 3.2 + MyBatis-Plus` |
+| 3.1 | `/design-controller` | Controller 技术方案 | `/design-controller 订单创建` |
+| 3.2 | `/design-listener` | Listener 技术方案 | `/design-listener 订单支付回调` |
+| 3.3 | `/design-job` | Job 技术方案 | `/design-job 订单超时关闭` |
+| 4.1 | `/task-breakdown` | 任务拆解 | `/task-breakdown 技术方案/订单创建.md` |
+| 4.2 | `/contract-tests` | 写契约测试（先红） | `/contract-tests 技术方案/订单创建.md` |
+| 5.1 | `/implement` | AI 编码（让测试变绿） | `/implement 任务拆解/订单创建.md` |
+| 5.2 | `/accept` | 验收报告 | `/accept 订单创建` |
 
 **方式 B：自然语言触发**
 

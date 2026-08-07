@@ -10,7 +10,7 @@ description: Use when the user wants to develop a module or feature with AI foll
 **不跑偏**：让 AI 生成规范、可验证、可维护的代码。五道防线：
 
 1. **类型化模板** — 每种产物格式固定（Controller/Listener/Job），AI 没有发挥空间
-2. **验收场景前置** — 方案阶段写死"怎么算对"，第 ④ 步翻译成测试
+2. **验收场景前置** — 方案阶段写死"怎么算对"，4.2 契约测试阶段翻译成测试
 3. **约束硬规则** — 项目约束是"能检查对错"的规则，AI 逐条对照
 4. **角色分离** — 写测试的标准 ≠ 实现代码的 AI，防止"骗绿"
 5. **收敛兜底** — 实现后按类型逐条核对，防规格漂移
@@ -21,16 +21,18 @@ description: Use when the user wants to develop a module or feature with AI foll
 
 用斜杠命令按步骤执行，每步可独立触发、独立检查：
 
-| 步骤 | 命令 | 用途 |
+| 编号 | 命令 | 用途 |
 |---|---|---|
-| ① 需求分析 | `/feature-list` | 生成功能清单 |
-| ①+ 澄清 | `/clarify` | 盘问歧义/边界/依赖（方案前必做） |
-| ② 技术架构 | `/constraints` | 生成项目约束 |
-| ③ 技术方案 | `/design-controller` `/design-listener` `/design-job` | 按类型生成方案 |
-| ④ 任务拆解 | `/task-breakdown` | 拆任务清单 |
-| ④ 契约测试 | `/contract-tests` | 写红色测试 |
-| ⑤ AI 编码 | `/implement` | 让测试变绿 |
-| ⑤ 验收 | `/accept` | 收敛核对报告 |
+| 1.1 | `/feature-list` | 功能清单 |
+| 1.2 | `/clarify` | 盘问歧义/边界/依赖（方案前必做） |
+| 2.1 | `/constraints` | 项目约束 |
+| 3.1 | `/design-controller` | 技术方案-Controller |
+| 3.2 | `/design-listener` | 技术方案-Listener |
+| 3.3 | `/design-job` | 技术方案-Job |
+| 4.1 | `/task-breakdown` | 任务拆解 |
+| 4.2 | `/contract-tests` | 接口契约测试（先红） |
+| 5.1 | `/implement` | AI 编码（让测试变绿） |
+| 5.2 | `/accept` | 验收报告 |
 
 命令文件在 `commands/` 目录，每个命令自带输入/执行/完成标准。
 
@@ -42,13 +44,13 @@ description: Use when the user wants to develop a module or feature with AI foll
 
 每步的详细指令见对应 `commands/` 命令文件，模板见 `templates/`。
 
-### ① 需求分析（人主导）→ `/feature-list`
+### 1.1 功能清单（人主导）→ `/feature-list`
 
 - **输入**：需求文档
 - **输出**：功能清单总览文件（表格），每项含：类型（Controller/Listener/Job）、优先级、依赖、**验收标准**（可验证，不能写"实现 XX 功能"）
 - **完成标准**：每项有类型 + 可验证验收标准 + 依赖标注
 
-### ①+ 澄清（人 + AI）→ `/clarify` ★ 方案前必做
+### 1.2 澄清（人 + AI）→ `/clarify` ★ 方案前必做
 
 - **输入**：功能清单
 - **输出**：澄清问题清单（人确认答案）+ 更新后的功能清单（补边界/风险列、依赖）
@@ -57,25 +59,25 @@ description: Use when the user wants to develop a module or feature with AI foll
 
 > 这是防跑偏的第一道闸门：歧义带进方案，后面全偏。宁可在这里多盘问，不要带歧义进入 `/design-*`。
 
-### ② 技术架构（人主导）→ `/constraints`
+### 2.1 项目约束（人主导）→ `/constraints`
 
 - **输入**：功能清单
 - **输出**：技术架构 + 项目约束（硬规则，能检查对错，禁止"尽量/建议"）
 - **完成标准**：每条约束可检查，版本号写死，AI 可直接读取
 
-### ③ 技术方案（人 + AI 辅助）→ `/design-controller` `/design-listener` `/design-job`
+### 3.x 技术方案（人 + AI 辅助）→ `/design-controller` `/design-listener` `/design-job`
 
 - **输入**：功能清单
 - **输出**：每功能项一份技术方案 md，按类型套模板（接口/JSON 示例/DDL/验收场景）
 - **完成标准（质量闸门）**：入参出参错误码无"待定"；DDL 完整；**验收场景含合法+非法+边界**；横切关注点已写明
 
-### ④ 任务拆解 + 契约测试（人主导，AI 辅助）→ `/task-breakdown` `/contract-tests`
+### 4.1 任务拆解 + 4.2 契约测试（人主导，AI 辅助）→ `/task-breakdown` `/contract-tests`
 
 - **输入**：技术方案 md + 项目约束
 - **输出**：任务拆解.md + 契约测试（**初始为红**）+ DDL
 - **完成标准**：每任务有文件路径+验收方法；**测试先跑一遍确认是红的**；验收场景全部翻译成用例
 
-### ⑤ AI 编码 + 收敛验收（AI 主导，人验证）→ `/implement` `/accept`
+### 5.1 AI 编码 + 5.2 收敛验收（AI 主导，人验证）→ `/implement` `/accept`
 
 - **输入**：任务拆解.md + 红色测试 + 项目约束
 - **输出**：绿色代码 + 验收报告
@@ -97,7 +99,7 @@ description: Use when the user wants to develop a module or feature with AI foll
 
 | 错误 | 修正 |
 |---|---|
-| 跳过 ③ 直接让 AI 写代码 | 方案有歧义，后面全跑偏。③ 是质量闸门，宁可多花时间 |
+| 跳过 3.x 直接让 AI 写代码 | 方案有歧义，后面全跑偏。3.x 是质量闸门，宁可多花时间 |
 | 让实现 AI 顺便写测试 | 会"骗绿"（改断言、写假测试）。测试必须人写或人审 |
 | 约束写成"尽量/建议" | 无法检查 = 无效约束。必须是能判对错的规则 |
 | 验收场景只写正常路径 | 非法/边界场景缺失 = 测试有洞。三态都要有 |
