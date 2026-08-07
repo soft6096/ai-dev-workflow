@@ -34,7 +34,7 @@ description: 生成技术架构 + 项目约束（第②步）。触发词：技�
 
 ## 输出
 
-`docs/项目约束.md`（参考模板 `templates/02-项目约束.md`）
+`docs/项目约束.md`（参考模板 `templates/2.1-项目约束.md`）
 
 ## 完成标准
 
