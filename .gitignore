@@ -13,3 +13,6 @@ Thumbs.db
 # Temp
 tmp/
 temp/
+
+# 解除全局 gitignore 对 SKILL.md 的忽略（本仓库需发布 skill 定义）
+!skill/ai-dev-workflow/SKILL.md
