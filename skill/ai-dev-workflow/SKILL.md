@@ -34,6 +34,31 @@ description: Use when the user wants to develop a module or feature with AI foll
 
 命令文件在 `commands/` 目录，每个命令自带输入/执行/完成标准。
 
+### 落盘规则（所有命令统一遵守）
+
+| 产物类型 | 落盘位置 |
+|---|---|
+| 文档（md） | `docs/<模块名>/` 目录下（每模块一个目录） |
+| 测试代码 | `src/test/java/<对应包>/` |
+| 业务代码 | `src/main/java/<对应包>/` |
+| 项目约束（全局共享） | `docs/项目约束.md`（跨模块，仅一份） |
+
+示例（订单模块）：
+
+```
+docs/
+├── 项目约束.md                    # 全局约束
+└── 订单模块/
+    ├── 功能清单.md
+    ├── 澄清问题清单.md
+    ├── 订单创建-技术方案.md
+    ├── 订单创建-任务拆解.md
+    └── 订单创建-验收报告.md
+src/
+├── main/java/com/example/order/    # 业务代码
+└── test/java/com/example/order/    # 测试代码
+```
+
 ### 方式二：一句话全流程
 
 用户说"按流程开发 XX 模块"时，按下方五步顺序执行，每步完成标准通过后才进入下一步。中途用户可要求跳到任一 `/命令`。
