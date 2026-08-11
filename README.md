@@ -88,7 +88,7 @@ ai-dev-workflow/
 
 1. 从 `skill/ai-dev-workflow/templates/` 复制需要的模板到你的项目 `docs/` 目录
 2. 按 1.1→5.2 顺序填写（每份模板开头有填写说明）
-3. 第 5.1 步把 `5.1-编码指令.md` 的内容连同 `任务拆解.md` 一起发给 AI
+3. 第 5.1 步把 `5.1-编码指令.md` 的内容连同 `4.1-任务拆解.md` 一起发给 AI
 
 ### 方式二：安装 Skill（Claude Code / Codex / OpenCode 等支持 skill 的 Agent）
 
@@ -156,17 +156,17 @@ cp -r skill/ai-dev-workflow ~/.agents/skills/
 | 文档（md） | `docs/<模块名>/` 目录下（每模块一个目录） |
 | 测试代码 | `src/test/java/<对应包>/` |
 | 业务代码 | `src/main/java/<对应包>/` |
-| 项目约束（全局共享） | `docs/项目约束.md`（跨模块，仅一份） |
+| 项目约束（全局共享） | `docs/2.1-项目约束.md`（跨模块，仅一份） |
 
 ```text
 docs/
-├── 项目约束.md                    # 全局约束
+├── 2.1-项目约束.md                  # 全局约束
 └── 订单模块/
-    ├── 功能清单.md
-    ├── 澄清问题清单.md
-    ├── 订单创建-技术方案.md
-    ├── 订单创建-任务拆解.md
-    └── 订单创建-验收报告.md
+    ├── 1.1-功能清单.md
+    ├── 1.2-澄清问题清单.md
+    ├── 3.1-订单创建-技术方案.md
+    ├── 4.1-订单创建-任务拆解.md
+    └── 5.2-订单创建-验收报告.md
 src/
 ├── main/java/com/example/order/    # 业务代码
 └── test/java/com/example/order/    # 测试代码

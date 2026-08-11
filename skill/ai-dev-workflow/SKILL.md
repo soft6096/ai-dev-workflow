@@ -41,7 +41,7 @@ description: Use when the user wants to develop a module or feature with AI foll
 | 文档（md） | `docs/<模块名>/` 目录下（每模块一个目录） |
 | 测试代码 | `src/test/java/<对应包>/` |
 | 业务代码 | `src/main/java/<对应包>/` |
-| 项目约束（全局共享） | `docs/项目约束.md`（跨模块，仅一份） |
+| 项目约束（全局共享） | `docs/2.1-项目约束.md`（跨模块，仅一份） |
 
 示例（订单模块）：
 
@@ -49,11 +49,11 @@ description: Use when the user wants to develop a module or feature with AI foll
 docs/
 ├── 项目约束.md                    # 全局约束
 └── 订单模块/
-    ├── 功能清单.md
-    ├── 澄清问题清单.md
-    ├── 订单创建-技术方案.md
-    ├── 订单创建-任务拆解.md
-    └── 订单创建-验收报告.md
+    ├── 1.1-功能清单.md
+    ├── 1.2-澄清问题清单.md
+    ├── 3.1-订单创建-技术方案.md
+    ├── 4.1-订单创建-任务拆解.md
+    └── 5.2-订单创建-验收报告.md
 src/
 ├── main/java/com/example/order/    # 业务代码
 └── test/java/com/example/order/    # 测试代码
