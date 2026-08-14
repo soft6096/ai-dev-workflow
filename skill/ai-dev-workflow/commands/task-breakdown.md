@@ -18,6 +18,7 @@ description: 按技术方案拆解任务清单（第④步）。触发词：任�
 - **Controller**：Phase 0 数据层 → Phase 0.5 公共组件 → Phase 1 契约测试（先红）→ Phase 2 Service → Phase 3 Controller → Phase 4 验证 → Phase 5 收尾
 - **Listener**：Phase 0 数据层 → Phase 0.5 公共组件 → Phase 1 消费逻辑测试（先红）→ Phase 2 实现 → Phase 3 集成 → Phase 4 收尾
 - **Job**：Phase 0 数据层 → Phase 0.5 公共组件 → Phase 1 执行逻辑测试（先红）→ Phase 2 实现 → Phase 3 集成 → Phase 4 收尾
+- **无入口**（配置/工具，技术方案第零段判定）：Phase 0 数据层 → Phase 0.5 公共组件 → Phase 2 核心逻辑 + 单元测试 → Phase 4 验证 → Phase 5 收尾（跳过契约测试/Controller/集成）
 
 > Phase 0.5 公共组件：技术方案"公共组件识别"章节有内容才拆（先写契约测试先红 → 实现变绿），无重复逻辑则整 Phase 留空，注明"无公共组件"。
 

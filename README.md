@@ -27,7 +27,7 @@
 1.1 需求分析 ──→ 功能清单总览（表格：功能项/类型/优先级/依赖/验收标准）
   │
   ▼
-1.2 澄清 ────→ 澄清问题清单（歧义/边界/依赖，人确认）+ 更新后功能清单
+1.2 澄清 ────→ 澄清问题清单（歧义/入口复杂度/边界/依赖，人确认）+ 更新后功能清单
   │
   ▼
 2.1 技术架构 ──→ 技术架构 + 项目约束（框架/中间件/版本，硬规则）
@@ -62,7 +62,7 @@ ai-dev-workflow/
         ├── SKILL.md           # 主入口（模型自动触发）
         ├── commands/          # 10 个步骤命令（/命令 分步执行）
         │   ├── feature-list.md        # 1.1 功能清单
-        │   ├── clarify.md             # 1.2 澄清歧义/边界/依赖
+        │   ├── clarify.md             # 1.2 澄清歧义/入口复杂度/边界/依赖
         │   ├── constraints.md         # 2.1 项目约束
         │   ├── design.md              # 3.x 技术方案（3.0 通用骨架 + 类型模板组合）
         │   ├── task-breakdown.md      # 4.1 任务拆解
@@ -116,7 +116,7 @@ cp -r skill/ai-dev-workflow ~/.agents/skills/
 | 编号 | 命令 | 用途 | 示例用法 |
 |---|---|---|---|
 | 1.1 | `/feature-list` | 生成功能清单 | `/feature-list 订单模块：创建/查询/取消订单` |
-| 1.2 | `/clarify` | 澄清歧义/边界/依赖 | `/clarify 订单模块` |
+| 1.2 | `/clarify` | 澄清歧义/入口复杂度/边界/依赖 | `/clarify 订单模块` |
 | 2.1 | `/constraints` | 生成项目约束 | `/constraints Spring Boot 3.2 + MyBatis-Plus` |
 | 3.x | `/design` | 技术方案（自动路由类型） | `/design 订单创建` |
 | 4.1 | `/task-breakdown` | 任务拆解 | `/task-breakdown 技术方案/订单创建.md` |
@@ -142,7 +142,7 @@ cp -r skill/ai-dev-workflow ~/.agents/skills/
 | 编号 | 动作 | 使用的模板 |
 |---|---|---|
 | 1.1 | 生成功能清单总览（表格） | `templates/1.1-功能清单.md` |
-| 1.2 | 澄清歧义/边界/依赖 | `templates/1.2-澄清问题清单.md` |
+| 1.2 | 澄清歧义/入口复杂度/边界/依赖 | `templates/1.2-澄清问题清单.md` |
 | 2.1 | 生成技术架构 + 项目约束 | `templates/2.1-项目约束.md` |
 | 3.x | 生成技术方案 | `templates/3.0-技术方案-通用骨架.md` + `templates/3.1/3.2/3.3-技术方案-*.md` |
 | 4.1/4.2 | 生成任务清单 + 红色测试 | `templates/4.1-任务拆解.md`、`4.2-接口契约测试.md` |
