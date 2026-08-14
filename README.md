@@ -33,7 +33,7 @@
 2.1 技术架构 ──→ 技术架构 + 项目约束（框架/中间件/版本，硬规则）
   │
   ▼
-3.x 技术方案 ──→ 每功能项一份技术方案 md（按类型套模板：Controller/Listener/Job）
+3.x 技术方案 ──→ 每功能项一份技术方案 md（3.0 通用骨架 + 类型模板：Controller/Listener/Job）
   │              含验收场景（测试用例蓝本）
   ▼
 4.1/4.2 任务拆解 + 契约测试（人主导）──→ 任务拆解.md + 红色测试 + DDL
@@ -64,7 +64,7 @@ ai-dev-workflow/
         │   ├── feature-list.md        # 1.1 功能清单
         │   ├── clarify.md             # 1.2 澄清歧义/边界/依赖
         │   ├── constraints.md         # 2.1 项目约束
-        │   ├── design.md              # 3.x 技术方案（按类型自动路由）
+        │   ├── design.md              # 3.x 技术方案（3.0 通用骨架 + 类型模板组合）
         │   ├── task-breakdown.md      # 4.1 任务拆解
         │   ├── contract-tests.md      # 4.2 接口契约测试
         │   ├── implement.md           # 5.1 AI 编码
@@ -73,6 +73,7 @@ ai-dev-workflow/
             ├── 1.1-功能清单.md
             ├── 1.2-澄清问题清单.md
             ├── 2.1-项目约束.md
+            ├── 3.0-技术方案-通用骨架.md
             ├── 3.1-技术方案-Controller.md
             ├── 3.2-技术方案-Listener.md
             ├── 3.3-技术方案-Job.md
@@ -143,7 +144,7 @@ cp -r skill/ai-dev-workflow ~/.agents/skills/
 | 1.1 | 生成功能清单总览（表格） | `templates/1.1-功能清单.md` |
 | 1.2 | 澄清歧义/边界/依赖 | `templates/1.2-澄清问题清单.md` |
 | 2.1 | 生成技术架构 + 项目约束 | `templates/2.1-项目约束.md` |
-| 3.x | 按类型生成技术方案 | `templates/3.1/3.2/3.3-技术方案-*.md` |
+| 3.x | 生成技术方案 | `templates/3.0-技术方案-通用骨架.md` + `templates/3.1/3.2/3.3-技术方案-*.md` |
 | 4.1/4.2 | 生成任务清单 + 红色测试 | `templates/4.1-任务拆解.md`、`4.2-接口契约测试.md` |
 | 5.1/5.2 | 让测试变绿 + 输出验收报告 | `templates/5.1-编码指令.md`、`5.2-验收报告.md` |
 
