@@ -15,9 +15,11 @@ description: 按技术方案拆解任务清单（第④步）。触发词：任�
 
 1. 按类型套用模板 `templates/4.1-任务拆解.md` 的任务结构：
 
-- **Controller**：Phase 0 数据层 → Phase 1 契约测试（先红）→ Phase 2 Service → Phase 3 Controller → Phase 4 验证 → Phase 5 收尾
-- **Listener**：Phase 0 数据层 → Phase 1 消费逻辑测试（先红）→ Phase 2 实现 → Phase 3 集成 → Phase 4 收尾
-- **Job**：Phase 0 数据层 → Phase 1 执行逻辑测试（先红）→ Phase 2 实现 → Phase 3 集成 → Phase 4 收尾
+- **Controller**：Phase 0 数据层 → Phase 0.5 公共组件 → Phase 1 契约测试（先红）→ Phase 2 Service → Phase 3 Controller → Phase 4 验证 → Phase 5 收尾
+- **Listener**：Phase 0 数据层 → Phase 0.5 公共组件 → Phase 1 消费逻辑测试（先红）→ Phase 2 实现 → Phase 3 集成 → Phase 4 收尾
+- **Job**：Phase 0 数据层 → Phase 0.5 公共组件 → Phase 1 执行逻辑测试（先红）→ Phase 2 实现 → Phase 3 集成 → Phase 4 收尾
+
+> Phase 0.5 公共组件：技术方案"公共组件识别"章节有内容才拆（先写契约测试先红 → 实现变绿），无重复逻辑则整 Phase 留空，注明"无公共组件"。
 
 2. 每个任务格式：`[ID] [P?] [Phase] 描述（文件路径 + 验收方法）`
    - `[P]` = 可并行（不同文件、无依赖）
@@ -30,4 +32,5 @@ description: 按技术方案拆解任务清单（第④步）。触发词：任�
 
 - [ ] 每个任务有文件路径 + 验收方法（AI 可独立执行）
 - [ ] 技术方案的验收场景全部翻译成测试任务（无遗漏）
-- [ ] 依赖顺序正确（Phase 0/1 完成后才进 Phase 2）
+- [ ] 技术方案"公共组件识别"已翻译成 Phase 0.5 任务（无重复则注明）
+- [ ] 依赖顺序正确（Phase 0/0.5 完成后才进 Phase 2）
