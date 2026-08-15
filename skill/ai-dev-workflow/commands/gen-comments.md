@@ -6,6 +6,8 @@ description: 为存量代码生成/补全注释。触发词：补注释/生成�
 
 为已有代码生成或补全注释。核心原则：**有 spec 走 spec，无 spec 降级为事实注释，猜不出的意图宁缺毋滥**。
 
+> 完整执行规则与注释规范见 **comment-standards** skill（`standards/gen-comments-workflow.md` + `standards/comment-standards.md`），本命令为流程入口。
+
 ## 输入
 
 - 目标代码路径（文件/目录/模块）
