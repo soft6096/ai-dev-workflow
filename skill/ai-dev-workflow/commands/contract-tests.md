@@ -6,6 +6,8 @@ description: 从技术方案生成契约测试（第④步，先红）。触发�
 
 从技术方案的"验收场景"表翻译成测试代码（**初始为红**，作为 AI 编码的标尺）。
 
+> 契约测试代码规范见 **test-standards** skill（`standards/contract-test-standards.md`），本命令为流程入口。
+
 ## 输入
 
 - 第③步的技术方案 md（验收场景表）
