@@ -198,6 +198,18 @@ src/
 - ✅ 对代码规范、可测试性、可追溯性有要求的团队
 - ⚠️ 原型验证、个人小工具、一次性脚本 → 这套流程偏重，直接用 Vibe Coding 即可
 
+## 配套 skill 生态
+
+本 skill 只管**流程**（怎么走：需求 → 方案 → 任务 → 验收）。编码时按环节配合以下规范 skill：
+
+| skill | GitHub | 职责 | 何时加载 |
+|---|---|---|---|
+| [build-standards](https://github.com/soft6096/build-standards) | 构建/依赖/多模块 | 写 pom、加依赖、拆模块 |
+| [java-code-standards](https://github.com/soft6096/java-code-standards) | Java 代码规范（19 类 + 安全/分布式） | 写任何 Java 代码 |
+| [comment-standards](https://github.com/soft6096/comment-standards) | 注释规范 | 写注释/补注释（流程约束模板引用） |
+| [database-standards](https://github.com/soft6096/database-standards) | SQL/表设计/索引/分页 | 写 SQL、建表 |
+| [test-standards](https://github.com/soft6096/test-standards) | 测试规范 | 写测试（4.2 契约测试引用） |
+
 ## License
 
 MIT
