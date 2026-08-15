@@ -14,5 +14,10 @@ Thumbs.db
 tmp/
 temp/
 
+# 本地演示文件（不入库）
+demo.html
+demo-fullpage.png
+demo*.png
+
 # 解除全局 gitignore 对 SKILL.md 的忽略（本仓库需发布 skill 定义）
 !skill/ai-dev-workflow/SKILL.md
