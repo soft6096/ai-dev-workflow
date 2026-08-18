@@ -17,6 +17,19 @@ description: Use when the user wants to develop a module or feature with AI foll
 
 ## 两种使用方式
 
+### 配套规范 skill 触发矩阵（各步骤必须加载对应规范）
+
+| 流程步骤 | 必须加载的规范 skill | 覆盖内容 |
+|---|---|---|
+| 2.1 `/constraints` | **build-standards** | 技术架构选型、依赖/版本管理、多模块结构 |
+| 3.x `/design` | **database-standards** + **java-code-standards** | DDL/表设计/索引（db）；Controller/Service 分层接口规范（java） |
+| 4.1 `/task-breakdown` | **database-standards** | Mapper XML 触发条件（简单查询禁 XML） |
+| 4.2 `/contract-tests` | **test-standards** | 契约测试规范（三态/先红后绿/方法名英文驼峰） |
+| 5.1 `/implement` | **java-code-standards**（必读）+ **database-standards** + **build-standards** + **comment-standards** | 生成 Java 代码前加载 java-code-standards（命名/分层/注释引用）；涉及 SQL/MyBatis-Plus 加载 database-standards；pom/依赖加载 build-standards；注释遵守 comment-standards |
+| 5.2 `/accept` | **comment-standards** + 各规范自检清单 | 注释核对 + 命名/分层/公共组件核对 |
+
+> 规范 skill 与流程 skill 的关系：**流程管「怎么走」，规范管「生成物长什么样」**。编码 Agent 的提示词必须携带上述规范加载要求，缺一不可。
+
 ### 方式一：分步执行（推荐，可随时介入）
 
 用斜杠命令按步骤执行，每步可独立触发、独立检查：
