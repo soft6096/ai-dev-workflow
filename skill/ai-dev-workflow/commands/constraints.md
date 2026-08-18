@@ -29,7 +29,7 @@ description: 生成技术架构 + 项目约束（第②步）。触发词：技�
 2. 所有新增接口必须加 @RequiresPermissions 权限注解
 3. 数据库操作统一走 Service 层
 4. 涉及多表写入必须 @Transactional
-5. 注释规范：公开 API 必须 Javadoc（@param/@return 写业务含义），内部仅复杂逻辑写 // WHY:，getter/setter 禁注释（详见模板"注释规范"章节）
+5. 注释规范：全量注释 —— 所有类（含 DTO/VO/Config）类注释写清职责、所有变量/字段注释写清含义、所有方法（含测试方法）注释（@param/@return 写业务含义）、方法体 ≥2 个逻辑步骤编号步骤注释、复杂逻辑 // WHY:（详见模板"注释规范"章节）
 ...
 ```
 
