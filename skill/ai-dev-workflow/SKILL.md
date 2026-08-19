@@ -25,10 +25,10 @@ description: Use when the user wants to develop a module or feature with AI foll
 | 3.x `/design` | **database-standards** + **java-code-standards** | DDL/表设计/索引（db）；Controller/Service 分层接口规范（java） |
 | 4.1 `/task-breakdown` | **database-standards** | Mapper XML 触发条件（简单查询禁 XML） |
 | 4.2 `/contract-tests` | **test-standards** | 契约测试规范（三态/先红后绿/方法名英文驼峰） |
-| 5.1 `/implement` | **java-code-standards**（必读）+ **database-standards** + **build-standards** + **comment-standards** | 生成 Java 代码前加载 java-code-standards（命名/分层/注释引用）；涉及 SQL/MyBatis-Plus 加载 database-standards；pom/依赖加载 build-standards；注释遵守 comment-standards |
+| 5.1 `/implement` | **java-code-standards**（必读）+ **database-standards** + **build-standards** + **comment-standards** | 生成 Java 代码前加载 java-code-standards（命名/分层/注释引用）；涉及 SQL/MyBatis-Plus 加载 database-standards；pom/依赖加载 build-standards；注释遵守 comment-standards。**委派子代理或主代理直接实现均强制，无豁免** |
 | 5.2 `/accept` | **comment-standards** + 各规范自检清单 | 注释核对 + 命名/分层/公共组件核对 |
 
-> 规范 skill 与流程 skill 的关系：**流程管「怎么走」，规范管「生成物长什么样」**。编码 Agent 的提示词必须携带上述规范加载要求，缺一不可。
+> 规范 skill 与流程 skill 的关系：**流程管「怎么走」，规范管「生成物长什么样」**。编码 Agent 的提示词必须携带上述规范加载要求，缺一不可。**兜底责任在本流程 skill**：无论编码由委派子代理还是主代理直接实现完成，写代码前必须先加载对应规范 skill，不得依赖项目 AGENTS.md 等外部兜底。
 
 ### 方式一：分步执行（推荐，可随时介入）
 
@@ -154,11 +154,12 @@ src/
 1. 测试文件是验收标准：禁止修改断言、禁止删除测试、禁止 @Disabled
 2. 严格按 Phase 顺序：先数据层 → 再公共组件（0.5）→ 再业务 → 再接口/消费/调度
 3. 必须遵守《项目约束》的全部规则（逐条对照，含"注释规范"与"公共组件规范"章节）
-4. 每个任务完成后独立提交（commit message = 任务 ID + 描述）
-5. 测试红时先排查实现，禁止"改测试迁就实现"
-6. 不实现任务拆解.md 之外的东西（不做"顺手优化"）；Phase 0.5 列出的公共组件必须实现并被复用点调用/继承。编码中发现设计外的重复逻辑：不擅自抽取，标注 `// TODO(收敛)` 由验收阶段统一处理
-7. 写代码时同 pass 生成注释（内容从技术方案派生，禁止事后补/编造），遵守注释规范（见 comment-standards skill）
-8. 收尾阶段核对注释、权限、事务、幂等、防重入
+4. **写任何代码前必须先加载对应规范 skill（无论委派子代理还是主代理直接实现，一律强制，无豁免）**：生成 Java 代码前加载 java-code-standards + comment-standards；涉及 SQL/表/MyBatis-Plus 再加载 database-standards；pom/依赖再加载 build-standards。兜底责任在本流程 skill：委派断链/直接实现不是豁免理由，编码 Agent 写代码前必须完成 skill 加载
+5. 每个任务完成后独立提交（commit message = 任务 ID + 描述）
+6. 测试红时先排查实现，禁止"改测试迁就实现"
+7. 不实现任务拆解.md 之外的东西（不做"顺手优化"）；Phase 0.5 列出的公共组件必须实现并被复用点调用/继承。编码中发现设计外的重复逻辑：不擅自抽取，标注 `// TODO(收敛)` 由验收阶段统一处理
+8. 写代码时同 pass 生成注释（内容从技术方案派生，禁止事后补/编造），遵守注释规范（见 comment-standards skill）
+9. 收尾阶段核对注释、权限、事务、幂等、防重入
 ```
 
 ## 常见错误
@@ -171,4 +172,5 @@ src/
 | 验收场景只写正常路径 | 非法/边界场景缺失 = 测试有洞。三态都要有 |
 | 实现完不核对方案 | 规格漂移悄悄发生。验收核对应是最后一关 |
 | 让 AI 编码时"顺手"抽公共类 | 会跑偏（改任务外代码）。公共组件必须方案期识别（3.x 架构自检）+ 拆入 Phase 0.5，编码只实现不复抽 |
+| 委派断链后主代理直接编码却不加载规范 skill | 规则悬空、代码无约束。规范 skill 加载是编码 Agent（主/子代理）写代码前第一步，委派失败即降级直接实现时同样强制，见硬性约束第 4 条 |
 | 澄清阶段没确认入口/复杂度 | 第零段判定靠 AI 猜，方案四段选错、全链跑偏。入口形态/业务复杂度/状态机归属必须在 1.2 澄清盘问并由人确认 |
