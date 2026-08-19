@@ -21,6 +21,7 @@ description: Use when the user wants to develop a module or feature with AI foll
 
 | 流程步骤 | 必须加载的规范 skill | 覆盖内容 |
 |---|---|---|
+| 1.1~5.2 所有 md 产物 | **`templates/00-中间产物-MD样式规范.md`** | 速览框 / 对齐表格 / mermaid 配色 / callout / 自检（生成任何中间产物 md 前必读） |
 | 2.1 `/constraints` | **build-standards** | 技术架构选型、依赖/版本管理、多模块结构 |
 | 3.x `/design` | **database-standards** + **java-code-standards** | DDL/表设计/索引（db）；Controller/Service 分层接口规范（java） |
 | 4.1 `/task-breakdown` | **database-standards** | Mapper XML 触发条件（简单查询禁 XML） |
