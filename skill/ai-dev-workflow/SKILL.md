@@ -15,12 +15,42 @@ description: Use when the user wants to develop a module or feature with AI foll
 4. **角色分离** — 写测试的标准 ≠ 实现代码的 AI，防止"骗绿"
 5. **收敛兜底** — 实现后按类型逐条核对，防规格漂移
 
+## 0.0 项目/工程初始化（脚手架，从零生成项目必做）
+
+**适用范围**：从零生成/初始化 Spring Boot 工程（含 AI 一次生成整个项目）。**只开发既有项目里的模块则跳过本节**，直接走 1.1。
+
+**为什么必须有这一步**：流程 1.1~5.2 假设"项目已存在"，但一次生成整个项目时，工程骨架缺基础设施会导致**启动即炸**。历史踩坑（真实事故）：
+
+| 缺失/错误 | 启动/运行现象 |
+|---|---|
+| 只有单个 application.yml，无环境拆分 | dev 配置带到生产，连错库 |
+| datasource 只配 url/username/password，无 HikariCP 池参数 | 高并发连接打满，难排查 |
+| JDBC URL 写 `characterEncoding=utf8mb4` | `Unsupported character encoding 'utf8mb4'` 启动失败 |
+| JDBC URL 端口默认 3306，实际环境非 3306（NAT/容器映射） | `Access denied for user 'xxx'@'localhost'` 连接被拒 |
+| 实体 `@TableField(fill=...)` 但项目无 MetaObjectHandler | 一插即炸：`Column 'create_time' cannot be null` |
+| 库/表沿用旧 schema，与代码 Entity 不匹配 | `Unknown column 'real_name' in 'field list'` |
+| MySQL 8 配了 5.1 旧驱动 | 字符集/时区/加密协议一串兼容问题 |
+
+**脚手架硬性检查清单（生成项目后逐项核对，缺一项即不合格）**：
+
+- [ ] 配置文件四件套：`application.yml` + `-dev` + `-qa` + `-online`（公共/开发/测试/生产），profile 激活 `${SPRING_PROFILES_ACTIVE:dev}` 不写死
+- [ ] HikariCP 显式池参数（maximum-pool-size / minimum-idle / pool-name 等），禁止 datasource 三件套裸奔
+- [ ] JDBC URL 字符集：**不写 `characterEncoding=utf8mb4`**（8.x 报 Unsupported character encoding），推荐不写或 `characterEncoding=UTF-8`；`serverTimezone=Asia/Shanghai` 必带
+- [ ] JDBC URL 端口与目标环境实际一致（禁止默认 3306 想当然）
+- [ ] MyBatis-Plus 插件配置（分页 + 乐观锁，参考 java-code-standards `04-templates/ConfigTemplate.java`）
+- [ ] MetaObjectHandler 实现（createTime/updateTime 自动填充，参考 `04-templates/MyMetaObjectHandler.java`）
+- [ ] 建库/建表显式 utf8mb4；**库初始化按当前 schema.sql 全量重建，禁止沿用旧库旧表**
+- [ ] MySQL 驱动 Connector/J 8.x（Spring Boot BOM 管理，无 5.1 旧驱动）
+
+> 规范出处：配置文件/连接池/字符集 → java-code-standards `01-java/application-config-standards.md`；表/schema → database-standards `standards/table-design-standards.md`；依赖 → build-standards `standards/dependency-standards.md`。模板见 `templates/0.0-项目初始化.md`。
+
 ## 两种使用方式
 
 ### 配套规范 skill 触发矩阵（各步骤必须加载对应规范）
 
 | 流程步骤 | 必须加载的规范 skill | 覆盖内容 |
 |---|---|---|
+| 0.0 项目/工程初始化 | **build-standards** + **java-code-standards**（application-config + 04-templates）+ **database-standards**（table-design） | 脚手架基础设施：多环境配置/HikariCP/JDBC 字符集/端口/MyBatis-Plus 插件/MetaObjectHandler/schema 一致性/驱动版本 |
 | 1.1~5.2 所有 md 产物 | **`templates/00-中间产物-MD样式规范.md`** | 速览框 / 对齐表格 / mermaid 配色 / callout / 自检（生成任何中间产物 md 前必读） |
 | 2.1 `/constraints` | **build-standards** | 技术架构选型、依赖/版本管理、多模块结构 |
 | 3.x `/design` | **database-standards** + **java-code-standards** | DDL/表设计/索引（db）；Controller/Service 分层接口规范（java） |
