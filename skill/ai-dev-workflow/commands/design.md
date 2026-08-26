@@ -9,7 +9,7 @@ description: 生成技术方案（第③步，按类型选 3.0 通用骨架 + 3.
 ## 输入
 
 - 功能清单（`docs/<模块名>V<版本号>-<YYYYMMDDHHMMSS>/1.1-功能清单.md`）—— **类型路由的依据**
-- 项目约束（`docs/2.1-项目约束.md`）
+- 项目约束（`docs/<模块名>V<版本号>-<YYYYMMDDHHMMSS>/2.1-项目约束.md`，目录名见 1.1 产物）
 - 规范 skill（按需加载）：设计 DDL/表/索引时加载 **database-standards**；设计 Controller/Service 接口分层时加载 **java-code-standards**
 
 ## 模板选择（核心逻辑）
