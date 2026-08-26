@@ -31,7 +31,7 @@ description: Use when the user wants to develop a module or feature with AI foll
 | 库/表沿用旧 schema，与代码 Entity 不匹配 | `Unknown column 'real_name' in 'field list'` |
 | MySQL 8 配了 5.1 旧驱动 | 字符集/时区/加密协议一串兼容问题 |
 
-**脚手架硬性检查清单（生成项目后逐项核对，缺一项即不合格）**：
+**脚手架硬性检查清单（生成项目后逐项核对，缺一项即不合格；命令 `/0.0-项目初始化`）**：
 
 - [ ] 配置文件四件套：`application.yml` + `-dev` + `-qa` + `-online`（公共/开发/测试/生产），profile 激活 `${SPRING_PROFILES_ACTIVE:dev}` 不写死
 - [ ] HikariCP 显式池参数（maximum-pool-size / minimum-idle / pool-name 等），禁止 datasource 三件套裸奔
@@ -101,9 +101,9 @@ description: Use when the user wants to develop a module or feature with AI foll
 | 流程步骤 | 必须加载的规范 skill | 覆盖内容 |
 |---|---|---|
 | 0.0 项目/工程初始化 | **build-standards** + **java-code-standards**（application-config + 04-templates）+ **database-standards**（table-design） | 脚手架基础设施：多环境配置/HikariCP/JDBC 字符集/端口/MyBatis-Plus 插件/MetaObjectHandler/schema 一致性/驱动版本 |
-| 0.5 存量代码扫描与约束适配 | **`templates/0.5-存量代码扫描.md`**（老项目约定基线模板）+ **`templates/2.1-项目约束-存量适配.md`**（存量模式约束模板） | 扫描只读不改码；约束来源 = 老项目事实（包/返回体/命名/中间件），非规范 skill |
+| 0.5 存量代码扫描与约束适配 | **`templates/0.5-存量代码扫描.md`**（老项目约定基线模板）+ **`templates/2.1-项目约束-存量适配.md`**（存量模式约束模板）；**选择优化 → 加载对应规范 skill**（java-code-standards / comment-standards / database-standards，按所选） | 扫描只读不改码；约束来源 = 老项目事实（包/返回体/命名/中间件），非规范 skill |
 | 1.1~5.2 所有 md 产物 | **`templates/00-中间产物-MD样式规范.md`** | 速览框 / 对齐表格 / mermaid 配色 / callout / 自检（生成任何中间产物 md 前必读） |
-| 2.1 `/constraints` | **build-standards**（标准模式）；存量适配模式 → **`templates/2.1-项目约束-存量适配.md`**（约束来源 = 0.5 扫描结论，非规范 skill） | 技术架构选型、依赖/版本管理、多模块结构；存量模式 = 老项目约定（包/返回体/命名/中间件） |
+| 2.1 `/constraints` | **build-standards**（标准模式，含走 0.5 选优化）；存量适配模式 → **`templates/2.1-项目约束-存量适配.md`**（约束来源 = 0.5 扫描结论，非规范 skill） | 技术架构选型、依赖/版本管理、多模块结构；存量模式 = 老项目约定（包/返回体/命名/中间件） |
 | 3.x `/design` | **database-standards** + **java-code-standards** | DDL/表设计/索引（db）；Controller/Service 分层接口规范（java） |
 | 4.1 `/task-breakdown` | **database-standards** | Mapper XML 触发条件（简单查询禁 XML） |
 | 4.2 `/contract-tests` | **test-standards** | 契约测试规范（三态/先红后绿/方法名英文驼峰） |
@@ -118,6 +118,7 @@ description: Use when the user wants to develop a module or feature with AI foll
 
 | 编号 | 命令 | 用途 |
 |---|---|---|
+| 0.0 | `/0.0-项目初始化` | 脚手架检查清单（从零生成工程必做；8 项硬检查，防"启动即炸"） |
 | 0.5 | `/legacy-scan` | 存量代码扫描与约束适配（老代码迭代新需求必做；扫描老项目约定 + 优化决策） |
 | 1.1 | `/feature-list` | 功能清单（先过滤非 Java 服务端需求） |
 | 1.2 | `/clarify` | 盘问歧义/入口复杂度/边界/依赖（方案前必做） |
@@ -140,6 +141,7 @@ description: Use when the user wants to develop a module or feature with AI foll
 | 业务代码 | `src/main/java/<对应包>/` |
 | 项目约束 | `docs/<模块名>V<版本号>-<YYYYMMDDHHMMSS>/2.1-项目约束.md`（每模块每版本一份，与 1.1/1.2/3.x 等产物同目录） |
 | 存量扫描结论（项目级） | `docs/0.5-存量代码扫描.md`（老代码迭代新需求时生成，跨模块共享一份） |
+| 脚手架核对（项目级） | `docs/0.0-脚手架核对.md`（从零生成工程时） |
 
 > **docs 模块目录命名**：`<模块名>V<版本号>-<YYYYMMDDHHMMSS>`——模块名 + V 开头版本号（**从 PRD/需求文档获取**，如 V1.2.0）+ 连字符 + 功能清单生成时间戳（YYYYMMDDHHMMSS）。例：`docs/订单模块V1.2.0-20260824103000/`。目录在 1.1 功能清单步骤创建（`/feature-list` 从需求文档读取版本号），后续步骤产物（含 2.1 项目约束）全部落入该目录，跨版本开发互不覆盖。
 
@@ -215,8 +217,8 @@ src/
 ### 2.1 项目约束（人主导）→ `/constraints`
 
 - **输入**：功能清单
-- **模式**：两种生成模式——
-  - **标准模式**（新项目 / 未走 0.5）：按规范 skill 生成约束（见下"输出"）
+- **模式**：三种情况——
+  - **标准模式**（新项目 / 未走 0.5 / **走 0.5 且选择按规范优化**）：按规范 skill 生成约束（见下"输出"）；走 0.5 选优化时，老代码已按所选规范优化过，新代码按规范——**中间件版本/账号等老项目事实仍对齐**（引用 `docs/0.5-存量代码扫描.md` 中间件清单，不在优化范围）
   - **存量适配模式**（已走 0.5 且用户选择跳过存量优化）：按 `docs/0.5-存量代码扫描.md` 生成约束，**约束来源 = 老项目实际约定**——新代码放入的包结构、返回体/公共组件（类名与位置对齐老代码，如 `R`/`Response`）、字段命名风格（Java 命名 + 数据库字段与老项目一致）、中间件（数据库/MQ/Redis/JOB 的版本、账号、接入规范与老代码一致）；规范 skill 仅在老项目无对应约定时兜底
   - **存量模式与老项目约束文件的关系（去重引用，不复制）**：老项目**有**项目级约束文件（AGENTS.md / CLAUDE.md / GEMINI.md / README 规范章节等，**以实际存在为准**）→ 文件里**已有的约束在 2.1 中直接引用**（"按老项目约束文件《XX》执行"，不复制内容），**只把文件里没有的约定补充进 2.1**；老项目**无**此类文件 → 扫描到的约定**全部写入 2.1**（2.1 是本次开发的唯一约束来源）
 - **输出**：技术架构 + 项目约束（硬规则，能检查对错，禁止"尽量/建议"）+ **注释规范**（全量注释规则：所有类/变量/方法必须注释 + 方法体步骤注释 + // WHY: 约定，含正反例）+ **公共组件规范**（包结构约定 common/util|base、第 2 个使用点必须抽公共、禁止复制粘贴）
