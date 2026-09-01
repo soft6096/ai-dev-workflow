@@ -19,7 +19,7 @@ description: 收敛验收：对照技术方案核对代码，输出验收报告�
    3. **SQL 全在 XML**：无注解 SQL（@Select 等）？手写 SQL 全在 resources/mapper/*.xml？
    4. **详细设计 SQL 注释**：技术方案《数据模型与 SQL》所有 SQL 带注释（-- 用途/归属/条件）？
    5. **DDL 字段注释**：建表语句每字段 COMMENT + 表级 COMMENT？
-   6. **JSON 入参/出参产物**：3.4-接口清单已生成且与方案一致（URL/方法/JSON 入参/JSON 出参成功+失败）？
+   6. **JSON 入参/出参产物**：每个 Controller 功能项的 `3.<功能项序号>.2-<功能名>-接口清单（前后端通用）.md` 已生成且与方案一致（URL/方法/JSON 入参/JSON 出参成功+失败）？
    - 其余 6 项 HIGH（事务 rollbackFor / SQL 注入 / UPDATE-DELETE 带 WHERE / 统一返回体 / 密码加密 / 分页上限）+ INFO + 场景化项见 `commands/check-standards.md`
    - 发现 HIGH ❌ → 追加为任务（T0xx）→ 返回 /implement 当场补齐 → 再跑测试 → 重新验收；补齐后仍 ❌ → 标注"需人工核对"，禁止带 ❌ 进入后续核对
 
