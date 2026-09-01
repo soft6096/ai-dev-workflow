@@ -64,6 +64,7 @@ description: 关键规范自动核对（第⑤步编码收尾兜底闸门 + 验�
 | 16 | Job 防重入 + 批处理 | `grep -rln "@Scheduled" src/main/java` 有命中 | 有分布式锁/状态位防重入；批处理带 LIMIT；无长事务 |
 | 17 | Listener 幂等 + 死信 | `grep -rln "@RabbitListener\|@KafkaListener" src/main/java` 有命中 | 消费幂等（唯一键/状态位）；重试有上限 + 死信队列；无 catch 静默 |
 | 18 | 文件上传安全 | `grep -rln "MultipartFile" src/main/java` 有命中 | 扩展名+MIME 双白名单；UUID 重命名；大小限制 |
+| 19 | 写接口幂等（HTTP） | Controller 存在 POST/PUT 写接口（下单/支付回调/批量提交等） | 写接口有幂等方案：唯一键约束 / 幂等令牌（防重提交） / Redis SETNX；幂等键持久化与业务同事务；无重复双写（自动 grep 难查 → **人工抽查**，标"需人工核对"；见 java-code-standards `distributed-standards.md`） |
 
 ### 代码规范组（所有代码必核，❌ 先向用户确认再补齐）
 
