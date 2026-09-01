@@ -86,7 +86,7 @@ ai-dev-workflow/
         │   ├── check-standards.md   # 5.1 收尾关键规范自动核对（产物 5.2 规范核对报告）
         │   ├── accept.md            # 5.3 验收报告
         │   └── gen-comments.md      # 附加：存量代码补注释
-        └── templates/         # 17 份中间产物空白模板（含完整示例）
+        └── templates/         # 16 份中间产物空白模板（含完整示例）
             ├── 0.0-项目初始化.md
             ├── 0.5-存量代码扫描.md
             ├── 00-中间产物-MD样式规范.md
@@ -102,8 +102,7 @@ ai-dev-workflow/
             ├── 4.1-任务拆解.md
             ├── 4.2-接口契约测试.md
             ├── 5.1-编码指令.md
-            ├── 5.3-验收报告.md
-            └── 00-中间产物-MD样式规范.md
+            └── 5.3-验收报告.md
 ```
 
 ## 快速开始
@@ -147,7 +146,7 @@ cp -r skill/ai-dev-workflow ~/.agents/skills/
 | 4.1 | `/task-breakdown` | 任务拆解 | `/task-breakdown 技术方案/订单创建.md` |
 | 4.2 | `/contract-tests` | 写契约测试（先红） | `/contract-tests 技术方案/订单创建.md` |
 | 5.1 | `/implement` | AI 编码（让测试变绿） | `/implement 任务拆解/订单创建.md` |
-| 5.1 收尾 | `/check-standards` | 关键规范自动核对（12 项 HIGH + C/N 组 + 证据，兜底闸门；产物 5.2 规范核对报告） | `/check-standards 项目路径` |
+| 5.1 收尾 | `/check-standards` | 关键规范自动核对（12 项 HIGH + C/N 组 + INFO + 场景化 + 证据，兜底闸门；产物 5.2 规范核对报告） | `/check-standards 项目路径` |
 | 5.3 | `/accept` | 验收报告（含 quickstart 调通证据） | `/accept 订单创建` |
 
 **方式 B：自然语言触发**
