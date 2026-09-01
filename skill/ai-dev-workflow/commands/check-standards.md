@@ -37,7 +37,7 @@ description: 关键规范自动核对（第⑤步编码收尾兜底闸门 + 验�
 | # | 核对项 | 标准检查指令（实际执行） | 判定标准（全部满足才 ✅） | 规范出处 |
 | :---: | :--- | :--- | :--- | :--- |
 | 1 | 接口文档支持（OpenAPI/Swagger）⚠️选型敏感 | `grep -n "springdoc\|knife4j\|springfox\|swagger" pom.xml`；`grep -rln "@Tag\|@Operation\|@Api\|@ApiOperation" src/main/java`；`grep -rln "@Schema\|@ApiModelProperty" src/main/java` | **按 2.1 选型/老约定判定**：标准模式 springdoc/knife4j → pom 有依赖 + Controller 有 @Tag/@Operation + DTO/VO 有 @Schema（Apifox 约定注解照写）；老项目 Swagger2 → 按 @Api/@ApiOperation/@ApiModelProperty 体系；老约定不写注解（纯 Apifox 在线文档）→ 按老约定，记"按老约定" | build-standards `dependency-standards.md` 4.6；java-code-standards `api-doc-standards.md` |
-| 2 | 日志框架支持 ⚠️选型敏感 | `ls src/main/resources/logback*.xml src/main/resources/log4j2*.xml`；`grep -rln "@Slf4j" src/main/java`；`grep -rn "System.out" src/main/java`；`grep -n "log4j2\|logback" pom.xml` | **按 2.1 选型/老约定判定**：Logback → logback-spring.xml 存在（控制台+滚动文件+环境级 level）；Log4j2 → log4j2 配置存在且 pom 无 logback 并存；任何模式：全类 @Slf4j、无 System.out | java-code-standards `00-common/04-logging-standards.md`；build-standards 4.7 |
+| 2 | 日志框架支持 ⚠️选型敏感 | `ls src/main/resources/logback*.xml src/main/resources/log4j2*.xml`；`grep -rln "@Slf4j" src/main/java`；`grep -rn "System.out" src/main/java`；`grep -n "log4j2\|logback" pom.xml` | **按 2.1 选型/老约定判定**：Logback → logback-spring.xml 存在（控制台+滚动文件+环境级 level）；Log4j2 → log4j2 配置存在且 pom 无 logback 并存；任何模式：全类 @Slf4j、无 System.out；**日志覆盖完善（人工抽查关键类）：请求入口有入参摘要+耗时日志、关键业务节点（状态变更/下单/消费完成/定时任务完成）有 INFO、异常处有 ERROR 带堆栈——大段逻辑零日志 → ❌（存量模式同样要求，不因老项目日志稀疏豁免）** | java-code-standards `00-common/04-logging-standards.md`；build-standards 4.7 |
 | 3 | SQL 在 XML（手写 SQL 统一收拢）⚠️选型敏感 | `grep -rn "@Select\|@Insert\|@Update\|@Delete\|<script>" src/main/java`；`ls src/main/resources/mapper/*.xml` | **按 2.1/老约定判定**：标准模式 → Java 无注解 SQL，手写 SQL 全在 XML，namespace 一致；老项目 ORM/约定不同（注解 SQL/JPA）→ 按 0.5 扫描的数据访问约定判定（2.1 存量适配约束内要求的仍遵守） | database-standards `mybatis-plus/mybatis-xml-standards.md` |
 | 4 | 详细设计 SQL 注释 | `grep -rn "CREATE TABLE\|SELECT \|INSERT INTO\|UPDATE " docs/*/3.*-技术方案*.md` | 技术方案《数据模型与 SQL》所有 SQL 带注释：DDL 每字段 COMMENT；查询/DML 每条 `--` 注释（用途+归属 Mapper+关键条件） | ai-dev-workflow `3.0-技术方案-通用骨架.md`；database-standards `sql-standards.md` 1.5 |
 | 5 | DDL 字段注释 | `grep -A 25 "CREATE TABLE" src/main/resources/db/schema.sql docs/*/3.*-技术方案*.md` | CREATE TABLE **每个字段**带 `COMMENT`（含义/枚举/单位/时区）+ 表级 COMMENT；无裸字段无注释 | database-standards `table-design-standards.md` |
@@ -88,7 +88,7 @@ description: 关键规范自动核对（第⑤步编码收尾兜底闸门 + 验�
 | :---: | :--- | :--- | :--- | :--- |
 | N1 | 类注释覆盖率 | `grep -rn "public class\|public interface" src/main/java`，逐个核对类前有 `/** */` 类注释 | 所有类（Controller/Service/Impl/Mapper/Entity/DTO/VO/Config/Utils）有类注释，第一句概述职责 | HIGH |
 | N2 | 方法 Javadoc 覆盖率 | `grep -rn "public " src/main/java`，逐个核对方法前有 `/** */`（含 @param/@return 业务含义） | 所有方法（含测试方法）有 Javadoc：功能 + @param/@return 写业务含义（不重复参数名） | HIGH |
-| N3 | 步骤注释 + WHY | 抽查方法体 ≥2 逻辑步骤的方法（Service/Job/Listener） | 方法体 ≥2 个逻辑步骤有编号注释（`// 1.`）；复杂逻辑有 `// WHY:`；注释与代码一致 | INFO（抽查） |
+| N3 | 步骤注释 + WHY（**大段代码必须有注释**） | `grep -rn "// 1\." src/main/java` 抽查；对照方法体 | 方法体 ≥2 个逻辑步骤有编号注释（`// 1.`）；复杂逻辑有 `// WHY:`；注释与代码一致；**无 ≥10 行连续逻辑代码零注释（人工抽查核心 Service/Job/Listener）——存量模式同样要求，不因老项目注释稀疏豁免** | HIGH |
 | N4 | 禁翻译式注释 | 抽查注释（对照代码） | 无逐行翻译式注释（`// 价格乘以数量`）；注释写业务含义非复述代码 | INFO（人工） |
 
 ## 输出格式
