@@ -23,12 +23,13 @@ description: 关键规范自动核对（第⑤步编码收尾兜底闸门 + 验�
 1. **先判模式**（见上"模式判定与核对依据"），读对应约束文件，确定选型类核对项的判定口径
 2. 对下方每一项，**实际执行「标准检查指令」**（grep/ast-grep），把**命令 + 命中行（文件:行号）粘贴为证据**
 3. 无命中 → 记 `✅`；命中违规 → 记 `❌`（附证据 + 严重度）
-4. **HIGH ❌** → 按对应规范出处**当场补齐** → 重跑该项指令 + 新证据（已修复）；补齐后仍无法满足 → **升级人工核对**（在报告中标注"需人工核对"）
-5. **INFO ❌** → 记录参考，不阻塞
+4. **HIGH/代码规范/注释组 ❌ → 先向用户确认，再执行补齐**：把该项证据展示给人，问"是否按规范补齐？"——**用户确认后**才执行补齐 → 重跑该项指令 + 新证据（已修复）；补齐后仍无法满足 → **升级人工核对**（在报告中标注"需人工核对"）。**禁止未经用户确认自动改代码**（补齐全过程有人的确认闸门）
+5. **INFO ❌** → 记录参考，不阻塞（如涉敏感/重复代码等可顺手处理项，同样先告知用户再动）
 6. 输出《关键规范核对报告》（逐项 ✅/❌ + 证据），结果汇总进 5.2 验收报告"关键规范落地核对表"
 
-> [!WARNING] 证据强制
+> [!WARNING] 证据强制 + 用户确认闸门
 > **每项必须给出实际执行的 grep/ast-grep 命令与命中行**。只写 ✅/❌ 无证据 = 未核对，打回重跑。禁止"没做就声称做了"。
+> **发现未执行到位项 → 必须停下来让用户确认是否执行补齐**（人确认后才动手改代码），不自动默默补齐。
 
 ## 检查项清单
 
@@ -65,27 +66,52 @@ description: 关键规范自动核对（第⑤步编码收尾兜底闸门 + 验�
 | 17 | Listener 幂等 + 死信 | `grep -rln "@RabbitListener\|@KafkaListener" src/main/java` 有命中 | 消费幂等（唯一键/状态位）；重试有上限 + 死信队列；无 catch 静默 |
 | 18 | 文件上传安全 | `grep -rln "MultipartFile" src/main/java` 有命中 | 扩展名+MIME 双白名单；UUID 重命名；大小限制 |
 
+### 代码规范组（所有代码必核，❌ 先向用户确认再补齐）
+
+> 规范出处：java-code-standards `00-common/*` + `01-java/*`（命名/分层/注入/异常/实体边界）。质量类项（重复代码）需人工抽查，机器只扫可查信号。
+
+| # | 核对项 | 标准检查指令（实际执行） | 判定标准 | 严重度 |
+| :---: | :--- | :--- | :--- | :--- |
+| C1 | 构造器注入 | `grep -rn "@Autowired" src/main/java`（**应为空**） | 无字段注入（`@Autowired` 字段）；统一构造器注入（`@RequiredArgsConstructor` + final 字段） | HIGH |
+| C2 | 分层边界 | `grep -rn "Mapper" src/main/java/*/controller/*.java`；Controller 方法体抽查 | Controller 不注入 Mapper、不写业务逻辑/SQL/事务（只收参→调 Service→返回） | HIGH |
+| C3 | Entity 不暴露 | `grep -rn "Entity\|@TableName" src/main/java/*/controller/*.java`；接口方法出入参抽查 | 接口出入参用 DTO/VO，不暴露 Entity（禁 Entity 直接作请求/响应） | HIGH |
+| C4 | 异常处理 | `grep -rn "throw new RuntimeException\|catch (.*) {}" src/main/java` | 无裸 `RuntimeException`（用 `BusinessException(ErrorCode, msg)`）；无空 catch 吞异常 | HIGH |
+| C5 | 命名单字母/泛称 | `grep -rn "catch (.* e)\|throw new.*(.* e)" src/main/java`；抽查类/变量名 | 无单字母类名（R/Result）、异常参数非 `e`、无泛称变量（dto/data/obj） | INFO |
+| C6 | 公共组件复用 | 扫描 `common/util`、`common/base` 与业务代码重复方法体（抽查 2-3 处） | Phase 0.5 公共组件已实现且被复用；无 ≥2 处相同/相似方法体（发现 → 提示抽公共，需人工确认） | INFO |
+
+### 注释组（所有代码必核，❌ 先向用户确认再补齐）
+
+> 规范出处：comment-standards `standards/comment-standards.md`（全量注释：所有类/变量/方法注释 + 步骤注释 + // WHY: + 禁翻译式）。机器查"覆盖率"，"质量"（业务含义/不翻译式）需人工抽查——覆盖率 ❌ 与质量可疑项都先向用户确认再处理。
+
+| # | 核对项 | 标准检查指令（实际执行） | 判定标准 | 严重度 |
+| :---: | :--- | :--- | :--- | :--- |
+| N1 | 类注释覆盖率 | `grep -rn "public class\|public interface" src/main/java`，逐个核对类前有 `/** */` 类注释 | 所有类（Controller/Service/Impl/Mapper/Entity/DTO/VO/Config/Utils）有类注释，第一句概述职责 | HIGH |
+| N2 | 方法 Javadoc 覆盖率 | `grep -rn "public " src/main/java`，逐个核对方法前有 `/** */`（含 @param/@return 业务含义） | 所有方法（含测试方法）有 Javadoc：功能 + @param/@return 写业务含义（不重复参数名） | HIGH |
+| N3 | 步骤注释 + WHY | 抽查方法体 ≥2 逻辑步骤的方法（Service/Job/Listener） | 方法体 ≥2 个逻辑步骤有编号注释（`// 1.`）；复杂逻辑有 `// WHY:`；注释与代码一致 | INFO（抽查） |
+| N4 | 禁翻译式注释 | 抽查注释（对照代码） | 无逐行翻译式注释（`// 价格乘以数量`）；注释写业务含义非复述代码 | INFO（人工） |
+
 ## 输出格式
 
 ```text
 === 关键规范核对报告 ===
-项目: <路径>    时间: <时间戳>
+项目: <路径>    时间: <时间戳>    模式: 标准/存量适配
 [✅] 1 OpenAPI/Swagger    证据: pom.xml:12 springdoc-openapi; UserController.java:3 @Tag
 [❌] 7 事务 rollbackFor  证据: OrderServiceImpl.java:45 @Transactional（无 rollbackFor）(HIGH)
-[✅] 12 分页上限          证据: UserQueryDTO.java:8 @Max(100) pageSize
+[❌] C1 构造器注入       证据: OrderServiceImpl.java:12 @Autowired（字段注入）(HIGH)
+[❌] N2 方法 Javadoc     证据: ProductServiceImpl.java:30 public 方法无 /** 注释 (HIGH)
 ...
-结论: 12 HIGH 通过 X / 未通过 Y（INFO 命中 Z 条参考）
-⚠️ 需人工核对: #7 事务 rollbackFor（补齐后仍 ❌） / ...
+结论: 12 HIGH + C/N 组：通过 X / 未通过 Y（INFO 命中 Z 条参考）
+⚠️ 未执行到位项（请用户确认是否补齐）: #7、C1、N2 …
 ```
 
-- 报告**落盘**：`docs/<模块名>V<版本号>-<YYYYMMDDHHMMSS>/check-standards-<功能名>.md`（产物落盘规则见 SKILL.md）；12 项 HIGH 结论汇总进 5.2 验收报告「关键规范落地核对表」
-- 全部 HIGH ✅ 才算过闸门；有 HIGH ❌ → 回到实现补齐 → 重跑本命令 → 仍 ❌ 升级人工核对
+- 报告**落盘**：`docs/<模块名>V<版本号>-<YYYYMMDDHHMMSS>/check-standards-<功能名>.md`（产物落盘规则见 SKILL.md）；12 项 HIGH + C/N 组结论汇总进 5.2 验收报告「关键规范落地核对表」
+- **未执行到位项必须向用户确认是否补齐**（展示证据 → 人确认 → 执行补齐 → 重跑）；全部通过才算过闸门；用户选择不补齐/补齐后仍 ❌ → 标注"需人工核对"
 
 ## 完成标准
 
 - [ ] **模式已判定**（标准/存量适配，读对应约束文件），选型敏感项（#1/#2/#3/#10）按项目约束/老项目约定判定，非规范默认值一刀切
-- [ ] 12 项 HIGH 全部实际执行检查指令并附证据（文件:行号）
-- [ ] HIGH 全 ✅；或 ❌ 项已补齐重跑通过；或已标注"需人工核对"（不静默吞掉）
+- [ ] 12 项 HIGH + 代码规范组（C1-C6）+ 注释组（N1-N4）全部实际执行检查指令并附证据（文件:行号）
+- [ ] 通过项全 ✅；未到位项**已向用户确认是否补齐**（非自动默默补）——确认后补齐重跑通过，或用户选择不补/仍 ❌ → 已标注"需人工核对"（不静默吞掉）
 - [ ] INFO/场景化项已核对并记录（命中项说明处理）
 - [ ] 核对报告已落盘 `docs/<模块名>V<版本号>-<YYYYMMDDHHMMSS>/check-standards-<功能名>.md`
 - [ ] 12 项 HIGH 结果已汇总进 5.2 验收报告核对表
