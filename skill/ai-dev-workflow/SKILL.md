@@ -41,6 +41,8 @@ description: Use when the user wants to develop a module or feature with AI foll
 - [ ] MetaObjectHandler 实现（createTime/updateTime 自动填充，参考 `04-templates/MyMetaObjectHandler.java`）
 - [ ] 建库/建表显式 utf8mb4；**库初始化按当前 schema.sql 全量重建，禁止沿用旧库旧表**
 - [ ] MySQL 驱动 Connector/J 8.x（Spring Boot BOM 管理，无 5.1 旧驱动）
+- [ ] 日志配置：`resources/logback-spring.xml` 已提供（控制台 + 滚动文件 + 环境级 level，参考 java-code-standards `04-templates/logback-spring.xml`）；application.yml 有 logging.level 覆盖
+- [ ] 接口文档依赖：接口模块已引 springdoc-openapi（/knife4j）且版本由 BOM 管理；`springdoc.api-docs.enabled` 按环境配置（online 关闭）
 
 > 规范出处：配置文件/连接池/字符集 → java-code-standards `01-java/application-config-standards.md`；表/schema → database-standards `standards/table-design-standards.md`；依赖 → build-standards `standards/dependency-standards.md`。模板见 `templates/0.0-项目初始化.md`。
 
@@ -144,6 +146,7 @@ description: Use when the user wants to develop a module or feature with AI foll
 | 项目约束 | `docs/<模块名>V<版本号>-<YYYYMMDDHHMMSS>/2.1-项目约束.md`（每模块每版本一份，与 1.1/1.2/3.x 等产物同目录） |
 | 存量扫描结论（项目级） | `docs/0.5-存量代码扫描.md`（老代码迭代新需求时生成，跨模块共享一份） |
 | 脚手架核对（项目级） | `docs/0.0-脚手架核对.md`（从零生成工程时） |
+| 关键规范核对报告（5.1 收尾） | `docs/<模块名>V<版本号>-<YYYYMMDDHHMMSS>/check-standards-<功能名>.md`（check-standards 输出，供 5.2 验收复核引用） |
 
 > **docs 模块目录命名**：`<模块名>V<版本号>-<YYYYMMDDHHMMSS>`——模块名 + V 开头版本号（**从 PRD/需求文档获取**，如 V1.2.0）+ 连字符 + 功能清单生成时间戳（YYYYMMDDHHMMSS）。例：`docs/订单模块V1.2.0-20260824103000/`。目录在 1.1 功能清单步骤创建（`/feature-list` 从需求文档读取版本号），后续步骤产物（含 2.1 项目约束）全部落入该目录，跨版本开发互不覆盖。
 
@@ -256,7 +259,7 @@ src/
 - **输入**：任务拆解.md + 红色测试 + 项目约束
 - **输出**：绿色代码（含按注释规范生成的注释）+ 验收报告（含**关键规范落地核对** + 注释核对 + **重复代码核对** + **quickstart 调通证据**）
 - **兜底闸门（关键规范自动核对）**：编码收尾运行 `/check-standards`——用 grep/ast-grep 实际扫描 12 项 HIGH（OpenAPI/Swagger、Logback、SQL 全在 XML、详细设计 SQL 注释、DDL 字段注释、JSON 入参/出参产物、事务 rollbackFor、SQL 注入、UPDATE/DELETE 带 WHERE、统一返回体、密码加密、分页上限），每项附证据；HIGH ❌ 按 skill 规范当场补齐重查，仍 ❌ 升级人工核对；5.2 验收同步复核（判定标准见 `commands/check-standards.md` + `templates/5.1-编码指令.md`"关于关键规范核对"）
-- **完成标准**：全部测试绿；关键规范核对 6 项全 ✅；验收报告无"未解决差异"；公共组件已实现且使用点复用、无 ≥2 处相同方法体；人工抽查 + **quickstart 调通证据齐全（必填：全新构建 + 真实启动日志 + 按验收场景逐条实测，仅测试绿不算通过）**
+- **完成标准**：全部测试绿；**关键规范自动核对 12 项 HIGH 全 ✅**；验收报告无"未解决差异"；公共组件已实现且使用点复用、无 ≥2 处相同方法体；人工抽查 + **quickstart 调通证据齐全（必填：全新构建 + 真实启动日志 + 按验收场景逐条实测，仅测试绿不算通过）**
 - **存量适配场景 quickstart**：老项目已接入的中间件与基础设施（数据库/缓存/消息队列/定时调度/文件存储/搜索引擎等，完整清单见 `0.5-存量代码扫描.md`）**直接复用老项目已有账号配置**连环境，确保调通；**账号缺失 → 向开发人员索取，禁止编造/凭印象填写**
 
 ## 硬性约束（写入编码 Agent 提示词，不可协商）
