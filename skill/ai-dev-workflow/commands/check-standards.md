@@ -24,7 +24,7 @@ description: 关键规范自动核对（第⑤步编码收尾兜底闸门 + 验�
 2. 对下方每一项，**实际执行「标准检查指令」**（grep/ast-grep），把**命令 + 命中行（文件:行号）粘贴为证据**
 3. 无命中 → 记 `✅`；命中违规 → 记 `❌`（附证据 + 严重度）
 4. **所有未执行到位项（HIGH / C/N / INFO / 场景化，不分重要与否）→ 统一列进「待用户确认清单」，一起向用户确认是否执行补齐**：把全部 ❌ 项证据汇总展示给人（**一次确认，不是逐项反复问**），问"以下 N 项未执行到位，是否按规范补齐？"——用户逐项确认（补齐 / 跳过）→ 确认"补齐"的项才执行补齐 → 重跑该项指令 + 新证据（已修复）；补齐后仍无法满足 → **升级人工核对**（标注"需人工核对"）。**禁止未经用户确认自动改代码、禁止把任何 ❌ 项当"不重要"默默跳过**（补齐全过程有人的确认闸门）
-5. 输出《关键规范核对报告》（逐项 ✅/❌ + 证据 + 待用户确认清单），结果汇总进 5.2 验收报告"关键规范落地核对表"
+5. 输出《关键规范核对报告》（逐项 ✅/❌ + 证据 + 待用户确认清单），结果汇总进 5.3 验收报告"关键规范落地核对表"
 
 > [!WARNING] 证据强制 + 用户确认闸门（所有未执行到位项一体确认）
 > **每项必须给出实际执行的 grep/ast-grep 命令与命中行**。只写 ✅/❌ 无证据 = 未核对，打回重跑。禁止"没做就声称做了"。
@@ -68,13 +68,14 @@ description: 关键规范自动核对（第⑤步编码收尾兜底闸门 + 验�
 ### 代码规范组（所有代码必核，❌ 先向用户确认再补齐）
 
 > 规范出处：java-code-standards `00-common/*` + `01-java/*`（命名/分层/注入/异常/实体边界）。质量类项（重复代码）需人工抽查，机器只扫可查信号。
+> **存量适配模式**：C1-C4 按老项目约定判定（如老项目统一用 `@Autowired` 字段注入 → 按老约定记录，不强制构造器注入；确认时提供"对齐老项目"选项）。
 
 | # | 核对项 | 标准检查指令（实际执行） | 判定标准 | 严重度 |
 | :---: | :--- | :--- | :--- | :--- |
-| C1 | 构造器注入 | `grep -rn "@Autowired" src/main/java`（**应为空**） | 无字段注入（`@Autowired` 字段）；统一构造器注入（`@RequiredArgsConstructor` + final 字段） | HIGH |
-| C2 | 分层边界 | `grep -rn "Mapper" src/main/java/*/controller/*.java`；Controller 方法体抽查 | Controller 不注入 Mapper、不写业务逻辑/SQL/事务（只收参→调 Service→返回） | HIGH |
+| C1 | 构造器注入 | `grep -rn "@Autowired" src/main/java`（**应为空**） | 无字段注入（`@Autowired` 字段）；统一构造器注入（`@RequiredArgsConstructor` + final 字段）（存量模式按老约定） | HIGH |
+| C2 | 分层边界 | `grep -rn "Mapper" src/main/java/*/controller/*.java`；Controller 方法体抽查 | Controller 不注入 Mapper、不写业务逻辑/SQL/事务（只收参→调 Service→返回）（存量模式按老约定） | HIGH |
 | C3 | Entity 不暴露 | `grep -rn "Entity\|@TableName" src/main/java/*/controller/*.java`；接口方法出入参抽查 | 接口出入参用 DTO/VO，不暴露 Entity（禁 Entity 直接作请求/响应） | HIGH |
-| C4 | 异常处理 | `grep -rn "throw new RuntimeException\|catch (.*) {}" src/main/java` | 无裸 `RuntimeException`（用 `BusinessException(ErrorCode, msg)`）；无空 catch 吞异常 | HIGH |
+| C4 | 异常处理 | `grep -rn "throw new RuntimeException\|catch (.*) {}" src/main/java` | 无裸 `RuntimeException`（用 `BusinessException(ErrorCode, msg)`）；无空 catch 吞异常（存量模式按老项目异常体系） | HIGH |
 | C5 | 命名单字母/泛称 | `grep -rn "catch (.* e)\|throw new.*(.* e)" src/main/java`；抽查类/变量名 | 无单字母类名（R/Result）、异常参数非 `e`、无泛称变量（dto/data/obj） | INFO |
 | C6 | 公共组件复用 | 扫描 `common/util`、`common/base` 与业务代码重复方法体（抽查 2-3 处） | Phase 0.5 公共组件已实现且被复用；无 ≥2 处相同/相似方法体（发现 → 提示抽公共，需人工确认） | INFO |
 
@@ -92,7 +93,7 @@ description: 关键规范自动核对（第⑤步编码收尾兜底闸门 + 验�
 ## 输出格式
 
 ```text
-=== 关键规范核对报告 ===
+=== 关键规范核对报告（5.2-<功能名>-规范核对报告）===
 项目: <路径>    时间: <时间戳>    模式: 标准/存量适配
 [✅] 1 OpenAPI/Swagger    证据: pom.xml:12 springdoc-openapi; UserController.java:3 @Tag
 [❌] 7 事务 rollbackFor  证据: OrderServiceImpl.java:45 @Transactional（无 rollbackFor）(HIGH)
@@ -100,16 +101,24 @@ description: 关键规范自动核对（第⑤步编码收尾兜底闸门 + 验�
 [❌] N2 方法 Javadoc     证据: ProductServiceImpl.java:30 public 方法无 /** 注释 (HIGH)
 ...
 结论: 12 HIGH + C/N 组：通过 X / 未通过 Y（INFO 命中 Z 条同样列入待确认）
-⚠️ 待用户确认清单（全部未执行到位项，一次确认）: #7、C1、N2、#13 …（逐项：补齐/跳过）
+⚠️ 待用户确认清单（全部未执行到位项，一次确认，按严重度分组）:
+  HIGH/C/N: #7 事务 rollbackFor、C1 构造器注入、N2 方法 Javadoc …
+  INFO:     #13 敏感信息、#14 集合命名 …
+  （逐项：补齐/跳过）
 ```
 
-- 报告**落盘**：`docs/<模块名>V<版本号>-<YYYYMMDDHHMMSS>/check-standards-<功能名>.md`（产物落盘规则见 SKILL.md）；12 项 HIGH + C/N 组 + INFO 结论汇总进 5.2 验收报告「关键规范落地核对表」
-- **全部未执行到位项（含 INFO）→ 一次向用户确认是否补齐**（展示证据 → 人逐项确认补齐/跳过 → 确认的才执行 → 重跑）；用户选择不补/补齐后仍 ❌ → 标注"需人工核对"
+- 报告**落盘**：`docs/<模块名>V<版本号>-<YYYYMMDDHHMMSS>/5.2-<功能名>-规范核对报告.md`（产物落盘规则见 SKILL.md；**5.2 = 5.1 收尾规范核对产物**）；12 项 HIGH + C/N 组 + INFO 结论汇总进 **5.3 验收报告**「关键规范落地核对表」
+- **全部未执行到位项（含 INFO）→ 一次向用户确认是否补齐**（展示证据 → 人逐项确认补齐/跳过 → 确认的才执行 → 重跑）
+
+> [!NOTE] 两个"人"的动作区分
+> - **用户确认闸门**（执行前）：发现未执行到位项 → 向用户确认"是否补齐"（补齐/跳过），确认后 AI 才动手——决定"要不要补"
+> - **升级人工核对**（执行后）：补齐后重跑仍 ❌、或用户选择跳过 → 该项标注"需人工核对"，由人介入判断——决定"怎么办"
+> 两者都需人在场，但时机不同：确认在动手前，人工核对在动手后仍失败时。
 
 ## 完成标准
 
-- [ ] **模式已判定**（标准/存量适配，读对应约束文件），选型敏感项（#1/#2/#3/#10）按项目约束/老项目约定判定，非规范默认值一刀切
+- [ ] **模式已判定**（标准/存量适配，读对应约束文件），选型敏感项（#1/#2/#3/#10）与代码规范 C1-C4 按项目约束/老项目约定判定，非规范默认值一刀切
 - [ ] 12 项 HIGH + 代码规范组（C1-C6）+ 注释组（N1-N4）+ INFO + 场景化全部实际执行检查指令并附证据（文件:行号）
 - [ ] **所有未执行到位项（不分重要与否）已一起向用户确认是否补齐**（非自动默默补、非只确认 HIGH）——确认"补齐"的项已补齐重跑通过；用户选择"跳过"或补齐后仍 ❌ → 已标注"需人工核对"（不静默吞掉）
-- [ ] 核对报告已落盘 `docs/<模块名>V<版本号>-<YYYYMMDDHHMMSS>/check-standards-<功能名>.md`
-- [ ] 12 项 HIGH + C/N 组结果已汇总进 5.2 验收报告核对表
+- [ ] 核对报告已落盘 `docs/<模块名>V<版本号>-<YYYYMMDDHHMMSS>/5.2-<功能名>-规范核对报告.md`
+- [ ] 12 项 HIGH + C/N 组结果已汇总进 5.3 验收报告核对表
