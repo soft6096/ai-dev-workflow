@@ -18,7 +18,7 @@ description: AI 按任务拆解实现代码，让测试变绿（第⑤步）。�
 1. 测试文件是验收标准：禁止修改断言、禁止删除测试、禁止 @Disabled
 2. 严格按 Phase 顺序：先数据层 → 再公共组件（0.5）→ 再业务 → 再接口/消费/调度
 3. 必须遵守《项目约束》的全部规则（逐条对照，含"注释规范"与"公共组件规范"章节）
-4. **生成的代码必须遵守规范 skill 约定**：写任何代码前先加载对应规范（Java → java-code-standards + comment-standards；SQL/表/MyBatis-Plus → database-standards；pom/依赖 → build-standards，触发矩阵见 SKILL.md），生成物不符合规范即不合格、需返工
+4. **生成的代码必须遵守规范 skill 约定**：写任何代码前先加载对应规范（Java → java-code-standards + comment-standards；SQL/表/MyBatis-Plus → database-standards（手写 SQL 一律 XML，禁注解 SQL）；pom/依赖 → build-standards（springdoc/knife4j、logback 依赖规则），触发矩阵见 SKILL.md），生成物不符合规范即不合格、需返工
 5. 每个任务完成后独立提交（commit message = 任务 ID + 描述）
 6. 测试红时先排查实现，禁止"改测试迁就实现"
 7. 不实现任务拆解.md 之外的东西（不做"顺手优化"）；Phase 0.5 列出的公共组件必须实现并被复用点调用/继承。编码中发现设计外的重复逻辑：不擅自抽取，在该处注释 `// TODO(收敛): 与 Xxx 重复，待抽公共`，由第⑤步验收统一处理
