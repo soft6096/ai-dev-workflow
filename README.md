@@ -110,7 +110,7 @@ ai-dev-workflow/
 ### 方式一：纯手工使用模板（无需任何工具）
 
 1. 从 `skill/ai-dev-workflow/templates/` 复制需要的模板到你的项目 `docs/` 目录（技术方案需配套复制：`3.0-技术方案-通用骨架.md` + 对应类型模板，如 `3.1-技术方案-Controller.md`）
-2. 按 1.1→5.2 顺序填写（每份模板开头有填写说明）
+2. 按 1.1→5.3 顺序填写（每份模板开头有填写说明）
 3. 第 5.1 步把 `5.1-编码指令.md` 的内容连同 `4.1-任务拆解.md` 一起发给 AI
 
 ### 方式二：安装 Skill（Claude Code / Codex / OpenCode 等支持 skill 的 Agent）
