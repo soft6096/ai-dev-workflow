@@ -108,7 +108,8 @@ description: Use when the user wants to develop a module or feature with AI foll
 | 4.1 `/task-breakdown` | **database-standards** | Mapper XML 触发条件（简单查询禁 XML） |
 | 4.2 `/contract-tests` | **test-standards** | 契约测试规范（三态/先红后绿/方法名英文驼峰） |
 | 5.1 `/implement` | **java-code-standards**（必读）+ **database-standards** + **build-standards** + **comment-standards** | 写代码前先加载：Java → java-code-standards（命名/分层/注释引用）+ comment-standards（注释）；SQL/MyBatis-Plus → database-standards；pom/依赖 → build-standards |
-| 5.2 `/accept` | **comment-standards** + 各规范自检清单 | 注释核对 + 命名/分层/公共组件核对 |
+| 5.1 收尾 `/check-standards` | 各规范自检清单 | 关键规范自动核对（12 项 HIGH，grep/ast-grep 附证据；HIGH ❌ 补齐/升级人工） |
+| 5.2 `/accept` | **comment-standards** + 各规范自检清单 | 注释核对 + 命名/分层/公共组件核对 + 关键规范复核 |
 
 > 规范 skill 与流程 skill 的关系：**流程管「怎么走」，规范管「生成物长什么样」**。编码 Agent 写代码前必须先加载对应规范 skill，保证**生成物符合规范**（兜底在流程 skill，不靠项目 AGENTS.md）。
 
@@ -127,6 +128,7 @@ description: Use when the user wants to develop a module or feature with AI foll
 | 4.1 | `/task-breakdown` | 任务拆解（公共组件入 Phase 0.5） |
 | 4.2 | `/contract-tests` | 接口契约测试（先红） |
 | 5.1 | `/implement` | AI 编码（让测试变绿） |
+| 5.1 收尾 | `/check-standards` | 关键规范自动核对（12 项 HIGH + 证据，兜底闸门） |
 | 5.2 | `/accept` | 验收报告（含重复代码核对） |
 | 附加 | `/gen-comments` | 存量代码补注释（有 spec 派生 / 无 spec 事实注释，不猜意图） |
 
@@ -155,6 +157,7 @@ docs/
     ├── 1.2-澄清问题清单.md
     ├── 2.1-项目约束.md
     ├── 3.1-订单创建-技术方案.md
+    ├── 3.4-接口清单-前后端通用.md   # 模块级接口契约（URL/JSON 入参/JSON 出参），后端完成后直接给前端
     ├── 4.1-订单创建-任务拆解.md
     └── 5.2-订单创建-验收报告.md
 src/
@@ -252,7 +255,7 @@ src/
 
 - **输入**：任务拆解.md + 红色测试 + 项目约束
 - **输出**：绿色代码（含按注释规范生成的注释）+ 验收报告（含**关键规范落地核对** + 注释核对 + **重复代码核对** + **quickstart 调通证据**）
-- **兜底闸门（关键规范核对）**：编码收尾必过——编码 Agent 逐项自答 6 类关键规范问题（①OpenAPI/Swagger ②Logback ③SQL 全在 XML ④详细设计 SQL 注释 ⑤DDL 字段注释 ⑥JSON 入参/出参产物），未到位按对应 skill 规范当场补齐再测试；5.2 验收同步设「关键规范落地核对表」人复核。判定标准见 `templates/5.1-编码指令.md`"关于关键规范核对"
+- **兜底闸门（关键规范自动核对）**：编码收尾运行 `/check-standards`——用 grep/ast-grep 实际扫描 12 项 HIGH（OpenAPI/Swagger、Logback、SQL 全在 XML、详细设计 SQL 注释、DDL 字段注释、JSON 入参/出参产物、事务 rollbackFor、SQL 注入、UPDATE/DELETE 带 WHERE、统一返回体、密码加密、分页上限），每项附证据；HIGH ❌ 按 skill 规范当场补齐重查，仍 ❌ 升级人工核对；5.2 验收同步复核（判定标准见 `commands/check-standards.md` + `templates/5.1-编码指令.md`"关于关键规范核对"）
 - **完成标准**：全部测试绿；关键规范核对 6 项全 ✅；验收报告无"未解决差异"；公共组件已实现且使用点复用、无 ≥2 处相同方法体；人工抽查 + **quickstart 调通证据齐全（必填：全新构建 + 真实启动日志 + 按验收场景逐条实测，仅测试绿不算通过）**
 - **存量适配场景 quickstart**：老项目已接入的中间件与基础设施（数据库/缓存/消息队列/定时调度/文件存储/搜索引擎等，完整清单见 `0.5-存量代码扫描.md`）**直接复用老项目已有账号配置**连环境，确保调通；**账号缺失 → 向开发人员索取，禁止编造/凭印象填写**
 
@@ -269,7 +272,7 @@ src/
 8. 写代码时同 pass 生成注释（内容从技术方案派生，禁止事后补/编造），遵守注释规范（见 comment-standards skill）
 9. 收尾阶段核对注释、权限、事务、幂等、防重入
 10. **与简洁类 skill（如 ponytail）共存：先满足本流程硬规则，再追求最简实现**——本流程的分层/注释/测试/中间产物是用户明确要求的硬规则，简洁类 skill 不得砍减；其极简原则仅在规范未指定的地方生效（见下方「与简洁类 skill 共存规则」）
-11. **收尾必过「关键规范核对」闸门**（判定标准见 `templates/5.1-编码指令.md`"关于关键规范核对"）：逐项自答 6 类关键规范问题——①OpenAPI/Swagger（依赖+@Tag/@Operation/@Schema+开关）②Logback（logback-spring.xml+全类 @Slf4j+无 System.out）③SQL 全在 XML（无注解 SQL，手写 SQL 全在 resources/mapper/*.xml）④详细设计 SQL 注释（方案所有 SQL 带 -- 注释）⑤DDL 字段注释（每字段 COMMENT）⑥JSON 入参/出参产物（3.4-接口清单已生成且与方案一致）；**任何一项未执行到位 → 按对应 skill 规范当场补齐 → 再跑全量测试**，禁止"没做就声称做了"
+11. **收尾必过「关键规范自动核对」闸门**（命令见 `commands/check-standards.md`）：运行 check-standards 核对 12 项 HIGH（含标准 grep/ast-grep 指令），每项**附实际执行证据（文件:行号）**——①OpenAPI/Swagger ②Logback ③SQL 全在 XML ④详细设计 SQL 注释 ⑤DDL 字段注释 ⑥JSON 入参/出参产物 ⑦事务 rollbackFor ⑧SQL 注入 ⑨UPDATE/DELETE 带 WHERE ⑩统一返回体 ⑪密码加密 ⑫分页上限；**HIGH ❌ → 按对应 skill 规范当场补齐 → 重跑该项 + 新证据 → 仍 ❌ → 升级人工核对**；禁止"没做就声称做了"
 ```
 
 ## 与简洁类 skill 共存规则（如 ponytail）

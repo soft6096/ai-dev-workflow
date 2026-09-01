@@ -13,14 +13,15 @@ description: 收敛验收：对照技术方案核对代码，输出验收报告�
 
 ## 执行
 
-0. **关键规范落地核对（兜底闸门，所有类型通用，最优先）**：按模板 `templates/5.2-验收报告.md` 的"关键规范落地核对表"逐项**实际检查产出**（grep 依赖/注解/XML、打开 logback-spring.xml、核对 DDL），6 项判定标准见 `templates/5.1-编码指令.md`"关于关键规范核对"：
+0. **关键规范自动核对（兜底闸门，所有类型通用，最优先）**：运行 `commands/check-standards.md` 核对（12 项 HIGH + INFO + 场景化，每项带标准 grep/ast-grep 指令）——**实际执行检查命令并核对证据（文件:行号），禁止凭记忆**。6 项核心（判定标准见 `templates/5.1-编码指令.md`"关于关键规范核对"）：
    1. **OpenAPI/Swagger**：springdoc/knife4j 依赖已引？Controller 有 @Tag/@Operation？DTO/VO 有 @Schema？开关按环境配置？
    2. **Logback**：logback-spring.xml 已提供（控制台+滚动文件+环境级 level）？全类 @Slf4j？无 System.out？
    3. **SQL 全在 XML**：无注解 SQL（@Select 等）？手写 SQL 全在 resources/mapper/*.xml？
    4. **详细设计 SQL 注释**：技术方案《数据模型与 SQL》所有 SQL 带注释（-- 用途/归属/条件）？
    5. **DDL 字段注释**：建表语句每字段 COMMENT + 表级 COMMENT？
    6. **JSON 入参/出参产物**：3.4-接口清单已生成且与方案一致（URL/方法/JSON 入参/JSON 出参成功+失败）？
-   - 发现 ❌ → 追加为任务（T0xx）→ 返回 /implement 当场补齐 → 再跑测试 → 重新验收，禁止带 ❌ 进入后续核对
+   - 其余 6 项 HIGH（事务 rollbackFor / SQL 注入 / UPDATE-DELETE 带 WHERE / 统一返回体 / 密码加密 / 分页上限）+ INFO + 场景化项见 `commands/check-standards.md`
+   - 发现 HIGH ❌ → 追加为任务（T0xx）→ 返回 /implement 当场补齐 → 再跑测试 → 重新验收；补齐后仍 ❌ → 标注"需人工核对"，禁止带 ❌ 进入后续核对
 
 1. 按模板 `templates/5.2-验收报告.md` 生成核对报告，按类型逐条核对：
 
