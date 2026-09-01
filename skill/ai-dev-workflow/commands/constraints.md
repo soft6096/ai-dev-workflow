@@ -24,7 +24,7 @@ description: 生成技术架构 + 项目约束（第②步）。触发词：技�
 | 存量适配模式 | 已走 0.5 且用户选择跳过存量优化 | **老项目实际约定**（0.5 扫描结论） | `templates/2.1-项目约束-存量适配.md` |
 
 1. **标准模式**（新项目 / 未走 0.5）——三步生成：
-   a. 确定技术架构总览：
+   a. 确定技术架构总览（**★ 工具选型必须先向用户确认，不默认**）：
 
 | 类别 | 选型 | 版本 | 说明 |
 |------|------|------|------|
@@ -32,6 +32,10 @@ description: 生成技术架构 + 项目约束（第②步）。触发词：技�
 | ORM | | | |
 | 数据库 | | | |
 | 缓存/消息/调度 | | | |
+| 日志框架 ★ | Logback（默认）/ Log4j2 | | 人确认；选 Log4j2 需排除 spring-boot-starter-logging 且禁与 Logback 并存（build-standards 4.7） |
+| 接口文档工具 ★ | springdoc-openapi（默认）/ knife4j / Apifox | | 人确认；代码侧 OpenAPI 注解 @Tag/@Operation/@Schema（java-code-standards api-doc-standards） |
+
+> **工具选型确认（强制）**：生成约束前向用户提问确认两项——①日志框架（Logback / Log4j2）②接口文档工具（springdoc-openapi / knife4j / Apifox）。用户明确选择后写入技术架构表与硬性约束；**禁止默认替用户决定**（老项目走 0.5 扫描结论对齐，见存量适配模式）。
 
    b. 生成**硬性约束**（每条必须能检查对错，禁止"尽量/建议"）：
 
