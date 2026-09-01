@@ -13,7 +13,7 @@ description: 收敛验收：对照技术方案核对代码，输出验收报告�
 
 ## 执行
 
-0. **关键规范自动核对（兜底闸门，所有类型通用，最优先）**：运行 `commands/check-standards.md` 核对（12 项 HIGH + INFO + 场景化，每项带标准 grep/ast-grep 指令）——**实际执行检查命令并核对证据（文件:行号），禁止凭记忆**。6 项核心（判定标准见 `templates/5.1-编码指令.md`"关于关键规范核对"）：
+0. **关键规范自动核对（兜底闸门，所有类型通用，最优先）**：运行 `commands/check-standards.md` 核对（12 项 HIGH + INFO + 场景化，每项带标准 grep/ast-grep 指令）——**先判模式**（标准模式读 2.1-项目约束、存量适配读 0.5 扫描+2.1-存量适配），**选型敏感项（#1 接口文档/#2 日志框架/#3 数据访问层/#10 返回体）按项目约束/老项目约定判定**，其余按规范；**实际执行检查命令并核对证据（文件:行号），禁止凭记忆**。6 项核心（判定标准见 `templates/5.1-编码指令.md`"关于关键规范核对"）：
    1. **OpenAPI/Swagger**：springdoc/knife4j 依赖已引？Controller 有 @Tag/@Operation？DTO/VO 有 @Schema？开关按环境配置？
    2. **Logback**：logback-spring.xml 已提供（控制台+滚动文件+环境级 level）？全类 @Slf4j？无 System.out？
    3. **SQL 全在 XML**：无注解 SQL（@Select 等）？手写 SQL 全在 resources/mapper/*.xml？
