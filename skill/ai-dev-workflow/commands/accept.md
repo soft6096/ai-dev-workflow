@@ -21,7 +21,7 @@ description: 收敛验收：对照技术方案核对代码，输出验收报告�
    5. **DDL 字段注释**：建表语句每字段 COMMENT + 表级 COMMENT？
    6. **JSON 入参/出参产物**：每个 Controller 功能项的 `3.<功能项序号>.2-<功能名>-接口清单（前后端通用）.md` 已生成且与方案一致（URL/方法/JSON 入参/JSON 出参成功+失败）？
    - 其余 6 项 HIGH（事务 rollbackFor / SQL 注入 / UPDATE-DELETE 带 WHERE / 统一返回体 / 密码加密 / 分页上限）+ INFO + 场景化项见 `commands/check-standards.md`
-   - 发现 HIGH/C/N ❌ → 追加为任务（T0xx）→ 返回 /implement **（实现前向用户确认是否补齐）** → 再跑测试 → 重新验收；补齐后仍 ❌ → 标注"需人工核对"，禁止带 ❌ 进入后续核对
+   - 发现任何 ❌（HIGH/C/N/INFO，不分重要与否）→ 追加为任务（T0xx）→ 返回 /implement **（实现前一起向用户确认是否补齐）** → 再跑测试 → 重新验收；补齐后仍 ❌ → 标注"需人工核对"，禁止带 ❌ 进入后续核对
 
 1. 按模板 `templates/5.2-验收报告.md` 生成核对报告，按类型逐条核对：
 
