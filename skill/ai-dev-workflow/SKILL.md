@@ -137,8 +137,9 @@ description: Use when the user wants to develop a module or feature with AI foll
 | 5.1 收尾 | `/check-standards` | 关键规范自动核对（12 项 HIGH + C/N 组 + INFO + 场景化 + 证据，兜底闸门） |
 | 5.3 | `/accept` | 验收报告（含重复代码核对） |
 | 附加 | `/gen-comments` | 存量代码补注释（有 spec 派生 / 无 spec 事实注释，不猜意图） |
+| 附加 | `/gen-logs` | 存量代码补全/完善日志（全类 @Slf4j / 删 System.out / 入口入参+耗时 / 关键节点 INFO / 异常 ERROR 带堆栈，只加日志不改业务） |
 
-命令文件在 `commands/` 目录，每个命令自带输入/执行/完成标准。`/gen-comments` 为独立命令，不属于五步流程，按需用于历史代码注释补全。
+命令文件在 `commands/` 目录，每个命令自带输入/执行/完成标准。`/gen-comments` 与 `/gen-logs` 为独立命令，不属于五步流程，按需用于历史代码注释/日志补全；存量代码注释与日志都缺时，先 `/gen-comments` 后 `/gen-logs` 依序执行。
 
 ### 落盘规则（所有命令统一遵守）
 

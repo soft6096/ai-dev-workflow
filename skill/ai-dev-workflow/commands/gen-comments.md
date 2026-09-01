@@ -7,6 +7,7 @@ description: 为存量代码生成/补全注释。触发词：补注释/生成�
 为已有代码生成或补全注释。核心原则：**有 spec 走 spec，无 spec 降级为事实注释，猜不出的意图宁缺毋滥**。
 
 > 完整执行规则与注释规范见 **comment-standards** skill（`standards/gen-comments-workflow.md` + `standards/comment-standards.md`），本命令为流程入口。
+> 若存量代码同时日志不完善（无 @Slf4j / System.out / 关键节点无日志），注释补全后**再运行 `/gen-logs` 补日志**（本命令只覆盖注释，不碰日志）。
 
 ## 输入
 

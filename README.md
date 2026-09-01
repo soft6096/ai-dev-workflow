@@ -73,7 +73,7 @@ ai-dev-workflow/
 └── skill/                     # 可安装的 Agent Skill（自包含：SKILL.md + commands + templates）
     └── ai-dev-workflow/
         ├── SKILL.md           # 主入口（模型自动触发）
-        ├── commands/          # 12 个步骤命令（/命令 分步执行）
+        ├── commands/          # 13 个步骤命令（/命令 分步执行）
         │   ├── 0.0-项目初始化.md     # 0.0 脚手架检查清单（从零生成工程必做）
         │   ├── legacy-scan.md       # 0.5 存量代码扫描与约束适配
         │   ├── feature-list.md      # 1.1 功能清单
@@ -85,7 +85,8 @@ ai-dev-workflow/
         │   ├── implement.md         # 5.1 AI 编码
         │   ├── check-standards.md   # 5.1 收尾关键规范自动核对（产物 5.2 规范核对报告）
         │   ├── accept.md            # 5.3 验收报告
-        │   └── gen-comments.md      # 附加：存量代码补注释
+        │   ├── gen-comments.md      # 附加：存量代码补注释
+        │   └── gen-logs.md          # 附加：存量代码补全/完善日志
         └── templates/         # 16 份中间产物空白模板（含完整示例）
             ├── 0.0-项目初始化.md
             ├── 0.5-存量代码扫描.md
@@ -148,6 +149,8 @@ cp -r skill/ai-dev-workflow ~/.agents/skills/
 | 5.1 | `/implement` | AI 编码（让测试变绿） | `/implement 任务拆解/订单创建.md` |
 | 5.1 收尾 | `/check-standards` | 关键规范自动核对（12 项 HIGH + C/N 组 + INFO + 场景化 + 证据，兜底闸门；产物 5.2 规范核对报告） | `/check-standards 项目路径` |
 | 5.3 | `/accept` | 验收报告（含 quickstart 调通证据） | `/accept 订单创建` |
+| 附加 | `/gen-comments` | 存量代码补注释（有 spec 派生 / 无 spec 事实注释，不猜意图） | `/gen-comments src/main/java/com/xxx/order` |
+| 附加 | `/gen-logs` | 存量代码补全/完善日志（全类 @Slf4j / 删 System.out / 入口入参+耗时 / 关键节点 INFO / 异常 ERROR 带堆栈） | `/gen-logs src/main/java/com/xxx/order` |
 
 **方式 B：自然语言触发**
 
@@ -160,6 +163,8 @@ cp -r skill/ai-dev-workflow ~/.agents/skills/
 | 拆任务 | "按技术方案拆任务" / "生成任务拆解" |
 | 写测试 | "按技术方案写契约测试" |
 | AI 编码 | "按任务拆解实现，让测试变绿" |
+| 存量补注释 | "给 XX 模块补注释" / "存量代码注释补全" |
+| 存量补日志 | "给 XX 模块补日志" / "日志不完善，完善一下" |
 
 #### 3. Skill 会做什么
 
