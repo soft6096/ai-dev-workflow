@@ -9,7 +9,7 @@ description: 关键规范自动核对（5.1 编码完成后的强制独立节点
 规范条目多、分散在多个 skill，AI 编码可能漏执行。本命令加载 **check-standards** skill 用 grep/ast-grep 实际扫描产出，逐项核对关键规范，**禁止凭记忆答 ✅**。
 
 > [!IMPORTANT] 本命令已独立为 **check-standards** skill
-> 完整检查清单（12 项 HIGH + 代码规范组 C1-C6 + 注释组 N1-N4 + INFO + 场景化 + 标准 grep/ast-grep 指令 + 判定标准 + 用户确认闸门）见 **check-standards** skill 的 SKILL.md。
+> 完整检查清单（全部核对项（无级别之分，含方法级注释/日志全覆盖） + 标准 grep/ast-grep 指令 + 判定标准 + 用户确认闸门）见 **check-standards** skill 的 SKILL.md。
 > 执行本命令时：**加载 check-standards skill**，按其中检查项清单逐项执行。
 
 ## 执行步骤
@@ -24,7 +24,7 @@ description: 关键规范自动核对（5.1 编码完成后的强制独立节点
 ## 完成标准
 
 - [ ] 已矫正产物命名与路径（docs/ 中间产物符合 3.x.1/3.x.2/5.2.x/5.3.x 规范，无任务 ID 前缀，路径在模块版本目录；矫正清单已确认）
-- [ ] 已加载 check-standards skill 并按其清单逐项核对（12 HIGH + C1-C6 + N1-N4 + INFO + 场景化）
+- [ ] 已加载 check-standards skill 并按其清单逐项核对（全部核对项（无级别之分））
 - [ ] 每项附证据（文件:行号）；未到位项已向用户确认后补齐 / 标注"需人工核对"（不静默吞掉）
 - [ ] 报告已落盘 `docs/<模块名>V<版本号>-<YYYYMMDDHHMMSS>/5.2.<功能项序号>-<功能名>-规范核对报告.md`
 - [ ] 已向用户展示报告并获确认（本节点产物闸门），确认后才进入 5.3

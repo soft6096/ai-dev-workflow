@@ -147,7 +147,7 @@ cp -r skill/ai-dev-workflow ~/.agents/skills/
 | 4.1 | `/task-breakdown` | 任务拆解 | `/task-breakdown 技术方案/订单创建.md` |
 | 4.2 | `/contract-tests` | 写契约测试（先红） | `/contract-tests 技术方案/订单创建.md` |
 | 5.1 | `/implement` | AI 编码（让测试变绿；编码完成即停，不自评规范核对） | `/implement 任务拆解/订单创建.md` |
-| 5.2 | `/check-standards` | 关键规范自动核对（**5.1 后 / 5.3 前强制独立节点**：12 项 HIGH + C/N 组 + INFO + 场景化 + 证据，产物 5.2 规范核对报告 + 用户确认闸门，**5.3 前置硬依赖**） | `/check-standards 项目路径` |
+| 5.2 | `/check-standards` | 关键规范自动核对（**5.1 后 / 5.3 前强制独立节点**：全部核对项（无级别之分，含方法级注释/日志全覆盖） + 证据，产物 5.2 规范核对报告 + 用户确认闸门，**5.3 前置硬依赖**） | `/check-standards 项目路径` |
 | 5.3 | `/accept` | 验收报告（**前置检查 5.2 报告存在性**，无则拒绝验收回 /check-standards；含 quickstart 调通证据） | `/accept 订单创建` |
 | 附加 | `/gen-comments` | 存量代码补注释（有 spec 派生 / 无 spec 事实注释，不猜意图） | `/gen-comments src/main/java/com/xxx/order` |
 | 附加 | `/gen-logs` | 存量代码补全/完善日志（全类 @Slf4j / 删 System.out / 入口入参+耗时 / 关键节点 INFO / 异常 ERROR 带堆栈） | `/gen-logs src/main/java/com/xxx/order` |
