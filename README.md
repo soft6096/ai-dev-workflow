@@ -179,7 +179,7 @@ cp -r skill/ai-dev-workflow ~/.agents/skills/
 | 2.1 | 生成技术架构 + 项目约束（标准 / 存量适配双模式） | `templates/2.1-项目约束.md` / `templates/2.1-项目约束-存量适配.md` |
 | 3.x | 生成技术方案 | `templates/3.0-技术方案-通用骨架.md` + `templates/3.1/3.2/3.3-技术方案-*.md` |
 | 4.1/4.2 | 生成任务清单 + 红色测试 | `templates/4.1-任务拆解.md`、`4.2-接口契约测试.md` |
-| 5.1/5.1 收尾/5.3 | 让测试变绿 + 规范核对 + 输出验收报告 | `templates/5.1-编码指令.md`、`5.3-验收报告.md`（规范核对见 `commands/check-standards.md`） |
+| 5.1/5.1 收尾/5.3 | 让测试变绿 + 规范核对 + 输出验收报告 | `templates/5.1-编码指令.md`、`5.3-验收报告.md`（规范核对加载 **check-standards** skill） |
 
 > skill 是**自包含**的：`SKILL.md`、`commands/`、`templates/` 在同一目录内，模板路径为相对引用，安装后无需任何额外配置。
 

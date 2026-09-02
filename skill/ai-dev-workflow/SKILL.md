@@ -1,6 +1,6 @@
 ---
 name: ai-dev-workflow
-description: Use when the user wants to develop a module or feature with AI following a structured spec-driven process — 按流程开发/按规格开发/生成功能清单/写技术方案/拆任务/契约测试/AI 编码收敛. Triggers on phrases like "按流程开发 XX 模块", "从需求到代码", "先生成功能清单", "写技术方案", "拆 tasks", "生成规范不跑偏的代码". Applies to Java service projects (Controller/Listener/Job) and similar layered backends.
+description: Use when the user wants to develop a Java backend feature — 覆盖两类场景：① 完整 spec 驱动流程（按流程开发/按规格开发/生成功能清单/写技术方案/拆任务/契约测试/AI 编码收敛）；② 轻量模式（写个接口/写 Controller/Service/ServiceImpl/实现功能/新增接口/改功能），直接"加载规范 → 写码(全注释+全日志) → check-standards 兜底". Triggers on phrases like "按流程开发 XX 模块", "从需求到代码", "写个 XX 接口", "实现 XX 功能", "写 Controller/Service", "新增 XX 接口". Applies to Java service projects (Controller/Listener/Job) and similar layered backends.
 ---
 
 # AI 开发完整流程（需求 → 上线）
@@ -114,7 +114,7 @@ description: Use when the user wants to develop a module or feature with AI foll
 | 4.1 `/task-breakdown` | **database-standards** | Mapper XML 触发条件（简单查询禁 XML） |
 | 4.2 `/contract-tests` | **test-standards** | 契约测试规范（三态/先红后绿/方法名英文驼峰） |
 | 5.1 `/implement` | **java-code-standards**（必读）+ **database-standards** + **build-standards** + **comment-standards** | 写代码前先加载：Java → java-code-standards（命名/分层/注释引用）+ comment-standards（注释）；SQL/MyBatis-Plus → database-standards；pom/依赖 → build-standards |
-| 5.1 收尾 `/check-standards` | 各规范自检清单 | 关键规范自动核对（12 项 HIGH + C/N 组 + INFO + 场景化，grep/ast-grep 附证据；未到位先确认再补齐/升级人工） |
+| 5.1 收尾 `/check-standards` | **check-standards** skill | 关键规范自动核对（加载 check-standards skill：12 项 HIGH + C/N 组 + INFO + 场景化，grep/ast-grep 附证据；未到位先确认再补齐/升级人工） |
 | 5.3 `/accept` | **comment-standards** + 各规范自检清单 | 注释核对 + 命名/分层/公共组件核对 + 关键规范复核 |
 
 > 规范 skill 与流程 skill 的关系：**流程管「怎么走」，规范管「生成物长什么样」**。编码 Agent 写代码前必须先加载对应规范 skill，保证**生成物符合规范**（兜底在流程 skill，不靠项目 AGENTS.md）。
@@ -134,7 +134,7 @@ description: Use when the user wants to develop a module or feature with AI foll
 | 4.1 | `/task-breakdown` | 任务拆解（公共组件入 Phase 0.5） |
 | 4.2 | `/contract-tests` | 接口契约测试（先红） |
 | 5.1 | `/implement` | AI 编码（让测试变绿） |
-| 5.1 收尾 | `/check-standards` | 关键规范自动核对（12 项 HIGH + C/N 组 + INFO + 场景化 + 证据，兜底闸门） |
+| 5.1 收尾 | `/check-standards` | 关键规范自动核对（加载 check-standards skill：12 项 HIGH + C/N 组 + INFO + 场景化 + 证据，兜底闸门） |
 | 5.3 | `/accept` | 验收报告（含重复代码核对） |
 | 附加 | `/gen-comments` | 存量代码补注释（有 spec 派生 / 无 spec 事实注释，不猜意图） |
 | 附加 | `/gen-logs` | 存量代码补全/完善日志（全类 @Slf4j / 删 System.out / 入口入参+耗时 / 关键节点 INFO / 异常 ERROR 带堆栈，只加日志不改业务） |
@@ -179,6 +179,16 @@ src/
 ### 方式二：一句话全流程
 
 用户说"按流程开发 XX 模块"时，**先执行上方"开发场景判定"**（新项目→0.0；老代码迭代→0.5 含优化决策闸门；已接入规范项目→1.1），再按流程顺序执行。**每步产物必须给人确认后才能进入下一步**（见下方"中间产物确认闸门"）。中途用户可要求跳到任一 `/命令`。
+
+### 方式三：轻量模式（写个接口 / 改个功能，非完整模块开发）
+
+当用户只是"写个 XX 接口 / 实现 XX 功能 / 改段代码"，而非完整模块开发时，**不强制走 1.1~4.2 重步骤**，直接：
+
+1. **加载规范**（写码前必做）：Java → java-code-standards + comment-standards；SQL → database-standards；pom → build-standards
+2. **写码**：全量注释 + 全量日志
+3. **收尾兜底**（硬性）：加载 **check-standards** skill 逐项核对，未执行到位项提示用户确认是否补齐
+
+> 轻量模式只是跳过"功能清单/技术方案/拆任务/契约测试"这些中间产物，**代码质量三条硬要求（全量注释、全量日志、check-standards 兜底）不打折**。老项目迭代同样先按上方"开发场景判定"走 0.5 存量扫描（至少对齐老项目包结构/返回体/命名/中间件），再走轻量模式。
 
 ## 中间产物确认闸门（强制，所有步骤适用）
 
@@ -267,7 +277,7 @@ src/
 
 - **输入**：任务拆解.md + 红色测试 + 项目约束
 - **输出**：绿色代码（含按注释规范生成的注释）+ 验收报告（含**关键规范落地核对** + 注释核对 + **重复代码核对** + **quickstart 调通证据**）
-- **兜底闸门（关键规范自动核对）**：编码收尾运行 `/check-standards`——用 grep/ast-grep 实际扫描 12 项 HIGH + 代码规范组（构造器注入/分层边界/Entity 不暴露/异常处理/命名/公共组件复用）+ 注释组（类/方法 Javadoc 覆盖率/步骤注释/禁翻译式）+ INFO + 场景化，每项附证据；**先判模式：选型敏感项（接口文档/日志框架/数据访问层/返回体）新项目按 2.1 人确认选型判定、老项目按 0.5 扫描约定判定**，其余按规范；**未执行到位项（含 INFO，不分重要与否）先向用户确认是否补齐（人确认后才动手），仍 ❌ 升级人工核对**；产物落盘 `5.2-<功能名>-规范核对报告.md`，供 5.3 验收复核引用（判定标准见 `commands/check-standards.md` + `templates/5.1-编码指令.md`"关于关键规范核对"）
+- **兜底闸门（关键规范自动核对）**：编码收尾运行 `/check-standards`——用 grep/ast-grep 实际扫描 12 项 HIGH + 代码规范组（构造器注入/分层边界/Entity 不暴露/异常处理/命名/公共组件复用）+ 注释组（类/方法 Javadoc 覆盖率/步骤注释/禁翻译式）+ INFO + 场景化，每项附证据；**先判模式：选型敏感项（接口文档/日志框架/数据访问层/返回体）新项目按 2.1 人确认选型判定、老项目按 0.5 扫描约定判定**，其余按规范；**未执行到位项（含 INFO，不分重要与否）先向用户确认是否补齐（人确认后才动手），仍 ❌ 升级人工核对**；产物落盘 `5.2-<功能名>-规范核对报告.md`，供 5.3 验收复核引用（判定标准见 check-standards skill + `templates/5.1-编码指令.md`"关于关键规范核对"）
 - **完成标准**：全部测试绿；**关键规范自动核对 12 项 HIGH + C/N 组 + INFO + 场景化全 ✅**（未到位项已向用户确认后补齐）；验收报告无"未解决差异"；公共组件已实现且使用点复用、无 ≥2 处相同方法体；人工抽查 + **quickstart 调通证据齐全（必填：全新构建 + 真实启动日志 + 按验收场景逐条实测，仅测试绿不算通过）**
 - **存量适配场景 quickstart**：老项目已接入的中间件与基础设施（数据库/缓存/消息队列/定时调度/文件存储/搜索引擎等，完整清单见 `0.5-存量代码扫描.md`）**直接复用老项目已有账号配置**连环境，确保调通；**账号缺失 → 向开发人员索取，禁止编造/凭印象填写**
 
@@ -284,7 +294,7 @@ src/
 8. 写代码时同 pass 生成注释（内容从技术方案派生，禁止事后补/编造），遵守注释规范（见 comment-standards skill）——**全量注释，禁止大段代码无注释**（存量适配模式同样适用，不因老项目注释稀疏豁免）
 9. 写代码时同步生成日志（遵守日志规范，见 java-code-standards `00-common/04-logging-standards.md`）——全类 @Slf4j、入口记入参摘要+耗时、关键业务节点记 INFO、异常记 ERROR 带堆栈（该加日志的地方必须加，存量适配模式同样适用，不因老项目日志稀疏豁免）；收尾阶段核对注释、日志、权限、事务、幂等、防重入
 10. **与简洁类 skill（如 ponytail）共存：先满足本流程硬规则，再追求最简实现**——本流程的分层/注释/测试/中间产物是用户明确要求的硬规则，简洁类 skill 不得砍减；其极简原则仅在规范未指定的地方生效（见下方「与简洁类 skill 共存规则」）
-11. **收尾必过「关键规范自动核对」闸门**（命令见 `commands/check-standards.md`）：运行 check-standards 核对 12 项 HIGH + 代码规范组 C1-C6 + 注释组 N1-N4 + INFO + 场景化（含标准 grep/ast-grep 指令），每项**附实际执行证据（文件:行号）**；**所有未执行到位项（含 INFO，不分重要与否）→ 一起向用户展示证据、确认"是否按规范补齐" → 用户确认后才执行补齐** → 重跑该项 + 新证据 → 仍 ❌ → 升级人工核对；禁止"没做就声称做了"、禁止未经用户确认自动改代码、禁止把任何 ❌ 当"不重要"跳过
+11. **收尾必过「关键规范自动核对」闸门**（加载 **check-standards** skill）：运行 check-standards 核对 12 项 HIGH + 代码规范组 C1-C6 + 注释组 N1-N4 + INFO + 场景化（含标准 grep/ast-grep 指令），每项**附实际执行证据（文件:行号）**；**所有未执行到位项（含 INFO，不分重要与否）→ 一起向用户展示证据、确认"是否按规范补齐" → 用户确认后才执行补齐** → 重跑该项 + 新证据 → 仍 ❌ → 升级人工核对；禁止"没做就声称做了"、禁止未经用户确认自动改代码、禁止把任何 ❌ 当"不重要"跳过
 ```
 
 ## 与简洁类 skill 共存规则（如 ponytail）
