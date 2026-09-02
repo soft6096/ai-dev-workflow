@@ -1,6 +1,6 @@
 ---
 name: ai-dev-workflow
-description: Use when the user wants to develop a Java backend feature — 覆盖两类场景：① 完整 spec 驱动流程（按流程开发/按规格开发/生成功能清单/写技术方案/拆任务/契约测试/AI 编码收敛）；② 轻量模式（写个接口/写 Controller/Service/ServiceImpl/实现功能/新增接口/改功能），直接"加载规范 → 写码(全注释+全日志) → check-standards 兜底". Triggers on phrases like "按流程开发 XX 模块", "从需求到代码", "写个 XX 接口", "实现 XX 功能", "写 Controller/Service", "新增 XX 接口". Applies to Java service projects (Controller/Listener/Job) and similar layered backends.
+description: Use when the user wants to develop a Java backend feature — 覆盖两类场景：① 完整 spec 驱动流程（按流程开发/按规格开发/生成功能清单/写技术方案/拆任务/契约测试/AI 编码收敛）；② 轻量模式（写个接口/写 Controller/Service/ServiceImpl/实现功能/新增接口/改功能），直接"加载规范 → 写码(全注释+全日志) → check-standards 兜底"。**用户没有需求文档/不走完整流程、只是直接要求写代码（写个接口/写个 Controller/改段代码/实现个功能）时，自动按轻量模式执行：加载规范 skill → 全量注释+全量日志写码 → check-standards 兜底——不得因"没走流程"而跳过注释/日志/核对**。Triggers on phrases like "按流程开发 XX 模块", "从需求到代码", "写个 XX 接口", "实现 XX 功能", "写 Controller/Service", "新增 XX 接口". Applies to Java service projects (Controller/Listener/Job) and similar layered backends.
 ---
 
 # AI 开发完整流程（需求 → 上线）
