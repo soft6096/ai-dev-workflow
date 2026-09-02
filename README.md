@@ -58,7 +58,7 @@
 人工验收 ──→ 上线
 ```
 
-> 编号与模板一一对应：1.1 功能清单 / 1.2 澄清 / 2.1 项目约束 / 3.x 技术方案 / 4.1 任务拆解、4.2 契约测试 / 5.1 编码、5.1 收尾规范核对（产物 5.2 规范核对报告）、5.3 验收。产物落盘见下方「落盘规则」。
+> 编号与模板一一对应：1.1 功能清单 / 1.2 澄清 / 2.1 项目约束 / 3.x 技术方案 / 4.1 任务拆解、4.2 契约测试 / 5.1 编码、5.2 规范核对（强制独立节点，产物 5.2 规范核对报告）、5.3 验收。产物落盘见下方「落盘规则」。
 
 ## 目录结构
 
@@ -83,7 +83,7 @@ ai-dev-workflow/
         │   ├── task-breakdown.md    # 4.1 任务拆解
         │   ├── contract-tests.md    # 4.2 接口契约测试
         │   ├── implement.md         # 5.1 AI 编码
-        │   ├── check-standards.md   # 5.1 收尾关键规范自动核对（产物 5.2 规范核对报告）
+        │   ├── check-standards.md   # 5.2 规范核对强制节点（产物 5.2 规范核对报告，5.3 前置硬依赖）
         │   ├── accept.md            # 5.3 验收报告
         │   ├── gen-comments.md      # 附加：存量代码补注释
         │   └── gen-logs.md          # 附加：存量代码补全/完善日志
@@ -146,9 +146,9 @@ cp -r skill/ai-dev-workflow ~/.agents/skills/
 | 3.x | `/design` | 技术方案（自动路由类型） | `/design 订单创建` |
 | 4.1 | `/task-breakdown` | 任务拆解 | `/task-breakdown 技术方案/订单创建.md` |
 | 4.2 | `/contract-tests` | 写契约测试（先红） | `/contract-tests 技术方案/订单创建.md` |
-| 5.1 | `/implement` | AI 编码（让测试变绿） | `/implement 任务拆解/订单创建.md` |
-| 5.1 收尾 | `/check-standards` | 关键规范自动核对（12 项 HIGH + C/N 组 + INFO + 场景化 + 证据，兜底闸门；产物 5.2 规范核对报告） | `/check-standards 项目路径` |
-| 5.3 | `/accept` | 验收报告（含 quickstart 调通证据） | `/accept 订单创建` |
+| 5.1 | `/implement` | AI 编码（让测试变绿；编码完成即停，不自评规范核对） | `/implement 任务拆解/订单创建.md` |
+| 5.2 | `/check-standards` | 关键规范自动核对（**5.1 后 / 5.3 前强制独立节点**：12 项 HIGH + C/N 组 + INFO + 场景化 + 证据，产物 5.2 规范核对报告 + 用户确认闸门，**5.3 前置硬依赖**） | `/check-standards 项目路径` |
+| 5.3 | `/accept` | 验收报告（**前置检查 5.2 报告存在性**，无则拒绝验收回 /check-standards；含 quickstart 调通证据） | `/accept 订单创建` |
 | 附加 | `/gen-comments` | 存量代码补注释（有 spec 派生 / 无 spec 事实注释，不猜意图） | `/gen-comments src/main/java/com/xxx/order` |
 | 附加 | `/gen-logs` | 存量代码补全/完善日志（全类 @Slf4j / 删 System.out / 入口入参+耗时 / 关键节点 INFO / 异常 ERROR 带堆栈） | `/gen-logs src/main/java/com/xxx/order` |
 
@@ -179,7 +179,7 @@ cp -r skill/ai-dev-workflow ~/.agents/skills/
 | 2.1 | 生成技术架构 + 项目约束（标准 / 存量适配双模式） | `templates/2.1-项目约束.md` / `templates/2.1-项目约束-存量适配.md` |
 | 3.x | 生成技术方案 | `templates/3.0-技术方案-通用骨架.md` + `templates/3.1/3.2/3.3-技术方案-*.md` |
 | 4.1/4.2 | 生成任务清单 + 红色测试 | `templates/4.1-任务拆解.md`、`4.2-接口契约测试.md` |
-| 5.1/5.1 收尾/5.3 | 让测试变绿 + 规范核对 + 输出验收报告 | `templates/5.1-编码指令.md`、`5.3-验收报告.md`（规范核对加载 **check-standards** skill） |
+| 5.1/5.2/5.3 | 让测试变绿 + 规范核对（强制独立节点）+ 验收 | `templates/5.1-编码指令.md`、`5.3-验收报告.md`（5.2 规范核对加载 **check-standards** skill，产物 5.2 报告为 5.3 前置硬依赖） |
 
 > skill 是**自包含**的：`SKILL.md`、`commands/`、`templates/` 在同一目录内，模板路径为相对引用，安装后无需任何额外配置。
 
@@ -193,7 +193,7 @@ cp -r skill/ai-dev-workflow ~/.agents/skills/
 | 项目约束 | `docs/<模块名>V<版本号>-<YYYYMMDDHHMMSS>/2.1-项目约束.md`（每模块每版本一份，与 1.1/1.2/3.x 等产物同目录） |
 | 存量扫描结论（项目级） | `docs/0.5-存量代码扫描.md`（老代码迭代新需求时生成，跨模块共享一份） |
 | 脚手架核对（项目级） | `docs/0.0-脚手架核对.md`（从零生成工程时） |
-| 规范核对报告（5.1 收尾） | `docs/<模块名>V<版本号>-<YYYYMMDDHHMMSS>/5.2-<功能名>-规范核对报告.md`（`/check-standards` 输出，供 5.3 验收复核引用） |
+| 规范核对报告（5.2 节点） | `docs/<模块名>V<版本号>-<YYYYMMDDHHMMSS>/5.2-<功能名>-规范核对报告.md`（`/check-standards` 输出 + 用户确认，**5.3 验收的前置硬依赖**） |
 
 > **docs 模块目录命名**：`<模块名>V<版本号>-<YYYYMMDDHHMMSS>`——模块名 + V 开头版本号（**从 PRD/需求文档获取**，如 V1.2.0）+ 连字符 + 功能清单生成时间戳（YYYYMMDDHHMMSS）。例：`docs/订单模块V1.2.0-20260824103000/`。目录在 1.1 功能清单步骤创建（`/feature-list` 从需求文档读取版本号），后续步骤产物（含 2.1 项目约束）全部落入该目录，跨版本开发互不覆盖。
 
@@ -231,7 +231,7 @@ src/
 | 2.1 | 技术架构 + 项目约束（标准 / 存量适配双模式） | 人 |
 | 3.x | 每功能项一份方案 md（类型化 + 验收场景） | 人 + AI 辅助 |
 | 4.1/4.2 | 任务拆解.md + 红色测试 + DDL | 人 |
-| 5.1/5.1 收尾/5.3 | 绿色代码 + 规范核对报告 + 验收报告 | AI + 人验证 |
+| 5.1/5.2/5.3 | 绿色代码 + 规范核对报告（5.3 前置硬依赖）+ 验收报告 | AI + 人验证 |
 | 验收 | 可上线 | 人 |
 
 ## 适用场景
